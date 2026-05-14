@@ -1,0 +1,189 @@
+/* ============================================================
+   RUZIK APPLIANCE REPAIR — MAIN CSS
+   Global variables, reset, typography, layout utilities
+   ============================================================ */
+
+/* ── DESIGN TOKENS ─────────────────────────────────────────── */
+:root {
+  /* Brand Colors */
+  --color-primary:     #0D1F3C;   /* deep navy — trust, professional */
+  --color-accent:      #E8500A;   /* burnt orange — energy, action    */
+  --color-accent-dark: #C04208;   /* hover state for accent           */
+  --color-light:       #F5F7FA;   /* off-white background             */
+  --color-white:       #FFFFFF;
+  --color-text:        #1A1A2E;   /* near-black for body copy         */
+  --color-text-muted:  #5A6478;   /* secondary text                   */
+  --color-border:      #DDE2EC;   /* subtle dividers                  */
+  --color-success:     #1A9E5C;   /* form success state               */
+  --color-error:       #D63B3B;   /* form error state                 */
+
+  /* Typography */
+  --font-display: 'Barlow Condensed', sans-serif;  /* headlines       */
+  --font-body:    'DM Sans', sans-serif;            /* body copy       */
+  --font-mono:    'JetBrains Mono', monospace;      /* code/details    */
+
+  /* Spacing scale (8px base) */
+  --space-1:  0.5rem;   /*  8px */
+  --space-2:  1rem;     /* 16px */
+  --space-3:  1.5rem;   /* 24px */
+  --space-4:  2rem;     /* 32px */
+  --space-5:  3rem;     /* 48px */
+  --space-6:  4rem;     /* 64px */
+  --space-7:  6rem;     /* 96px */
+
+  /* Layout */
+  --max-width:        1200px;
+  --content-width:    760px;
+  --border-radius:    6px;
+  --border-radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(13,31,60,0.08);
+  --shadow-md:  0 4px 16px rgba(13,31,60,0.12);
+  --shadow-lg:  0 8px 32px rgba(13,31,60,0.16);
+
+  /* Transitions */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow:   0.4s ease;
+}
+
+/* ── RESET ──────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--color-text);
+  background-color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover { color: var(--color-accent-dark); }
+
+ul, ol { list-style: none; }
+
+/* ── TYPOGRAPHY ─────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-primary);
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: clamp(2.2rem, 5vw, 3.5rem); }
+h2 { font-size: clamp(1.8rem, 3.5vw, 2.5rem); }
+h3 { font-size: clamp(1.3rem, 2.5vw, 1.75rem); }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
+
+p { margin-bottom: var(--space-2); }
+p:last-child { margin-bottom: 0; }
+
+strong { font-weight: 600; }
+
+/* ── LAYOUT UTILITIES ───────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-3);
+}
+
+.container--narrow {
+  max-width: var(--content-width);
+}
+
+.section {
+  padding: var(--space-7) 0;
+}
+
+.section--gray {
+  background-color: var(--color-light);
+}
+
+.section--dark {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.section--dark h1,
+.section--dark h2,
+.section--dark h3 {
+  color: var(--color-white);
+}
+
+/* Grid helpers */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .container { padding: 0 var(--space-2); }
+}
+
+/* Flex helpers */
+.flex         { display: flex; }
+.flex-center  { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-gap     { gap: var(--space-2); }
+
+/* Text helpers */
+.text-center  { text-align: center; }
+.text-muted   { color: var(--color-text-muted); }
+.text-accent  { color: var(--color-accent); }
+.text-white   { color: var(--color-white); }
+
+/* Visibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}

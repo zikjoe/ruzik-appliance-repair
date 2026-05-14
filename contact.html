@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | Ruzik Appliance Repair Atlanta, GA</title>
+  <meta name="description" content="Request appliance repair service in Atlanta, GA. Call or fill out our form for same-day or next-day service in Fulton County and surrounding areas." />
+  <link rel="canonical" href="https://www.ruzikappliancerepair.com/contact" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <link rel="stylesheet" href="assets/css/pages/contact.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="container nav__inner">
+      <a href="/" class="nav__logo">
+        <div class="nav__logo-mark">R</div>
+        <div class="nav__logo-text">
+          <span class="nav__logo-name">Ruzik Repair</span>
+          <span class="nav__logo-sub">Atlanta, GA</span>
+        </div>
+      </a>
+      <ul class="nav__links">
+        <li><a href="/" class="nav__link">Home</a></li>
+        <li><a href="services.html" class="nav__link">Services</a></li>
+        <li><a href="service-area.html" class="nav__link">Service Area</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+        <li><a href="contact.html" class="nav__link nav__link--active">Contact</a></li>
+      </ul>
+      <div class="nav__cta">
+        <a href="tel:678-824-5161" class="nav__phone">678-824-5161</a>
+        <a href="contact.html" class="btn btn--primary btn--sm">Get a Quote</a>
+      </div>
+      <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <div class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span class="breadcrumb__sep">›</span>
+          <span>Contact</span>
+        </nav>
+        <h1>Request Service</h1>
+        <p>Fill out the form below or call us directly. We respond within the hour during business hours.</p>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="contact-layout">
+
+          <!-- Form -->
+          <div class="contact-form-wrap reveal">
+            <h2>Tell Us About Your Appliance</h2>
+            <p class="text-muted" style="margin-bottom: var(--space-3)">We'll get back to you within the hour to confirm your appointment.</p>
+
+            <!-- Success message (hidden until form submits) -->
+            <div id="form-success" class="form-message form-message--success" style="display:none">
+              <strong>✓ Request received!</strong> We'll call you within the hour to confirm your appointment.
+            </div>
+
+            <!-- Error message -->
+            <div id="form-error" class="form-message form-message--error" style="display:none">
+              Something went wrong. Please call us directly at <a href="tel:678-824-5161">678-824-5161</a>.
+            </div>
+
+            <!-- The form — action points to Netlify Forms -->
+            <form
+              id="contact-form"
+              name="service-request"
+              method="POST"
+              action="/contact"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+            >
+              <!-- Netlify hidden fields -->
+              <input type="hidden" name="form-name" value="service-request" />
+              <p style="display:none"><input name="bot-field" /></p>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">Full Name *</label>
+                  <input type="text" id="name" name="name" placeholder="Jane Smith" required autocomplete="name" />
+                  <span id="error-name" class="form-error" style="display:none"></span>
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone Number *</label>
+                  <input type="tel" id="phone" name="phone" placeholder="(404) 555-0100" required autocomplete="tel" />
+                  <span id="error-phone" class="form-error" style="display:none"></span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address (optional)</label>
+                <input type="email" id="email" name="email" placeholder="jane@example.com" autocomplete="email" />
+                <span id="error-email" class="form-error" style="display:none"></span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="appliance">Appliance Type *</label>
+                  <select id="appliance" name="appliance" required>
+                    <option value="">Select appliance...</option>
+                    <option value="dryer">Dryer</option>
+                    <option value="dishwasher">Dishwasher</option>
+                    <option value="washer">Washer / Washing Machine</option>
+                    <option value="stove">Stove / Range / Oven</option>
+                    <option value="microwave">Microwave</option>
+                    <option value="refrigerator">Refrigerator</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <span id="error-appliance" class="form-error" style="display:none"></span>
+                </div>
+                <div class="form-group">
+                  <label for="brand">Appliance Brand</label>
+                  <select id="brand" name="brand">
+                    <option value="">Select brand...</option>
+                    <option>LG</option>
+                    <option>GE</option>
+                    <option>Frigidaire</option>
+                    <option>Whirlpool</option>
+                    <option>Samsung</option>
+                    <option>Maytag</option>
+                    <option>Kenmore</option>
+                    <option>Bosch</option>
+                    <option>Electrolux</option>
+                    <option>Other / Not Sure</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="model">Model Number (if known)</label>
+                <input type="text" id="model" name="model" placeholder="e.g. DLEX3700V" />
+                <small class="form-hint">Usually on a sticker inside the door or on the back panel</small>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Describe the Problem *</label>
+                <textarea id="message" name="message" rows="4" placeholder="e.g. Dryer runs but won't heat. Replaced thermal fuse 3 months ago and it blew again." required></textarea>
+                <span id="error-message" class="form-error" style="display:none"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="zip">ZIP Code *</label>
+                <input type="text" id="zip" name="zip" placeholder="30301" maxlength="5" style="max-width: 160px" required />
+                <small class="form-hint">We'll confirm we service your area</small>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--lg" style="width:100%; justify-content:center">
+                Send Service Request
+              </button>
+
+              <p class="form-disclaimer">By submitting, you agree to be contacted about your appliance repair request. We do not sell your information.</p>
+            </form>
+          </div>
+
+          <!-- Side info -->
+          <aside class="contact-aside reveal">
+            <div class="contact-info-card">
+              <h3>Call or Text Directly</h3>
+              <a href="tel:678-824-5161" class="contact-phone">678-824-5161</a>
+              <p class="text-muted">Mon – Sat: 8:00 AM – 6:00 PM</p>
+            </div>
+
+            <div class="contact-info-card">
+              <h3>Service Area</h3>
+              <ul class="contact-area-list">
+                <li>✓ Atlanta (all zones)</li>
+                <li>✓ Sandy Springs</li>
+                <li>✓ East Point</li>
+                <li>✓ College Park</li>
+                <li>✓ Decatur</li>
+                <li>✓ Smyrna</li>
+                <li>✓ Marietta</li>
+                <li>✓ Surrounding Fulton County</li>
+              </ul>
+              <a href="service-area.html" class="btn btn--outline btn--sm" style="margin-top:var(--space-2)">Full Service Area</a>
+            </div>
+
+            <div class="contact-info-card contact-info-card--accent">
+              <div class="contact-info-card__label">Response Time</div>
+              <div class="contact-info-card__value">Under 1 Hour</div>
+              <p>During business hours, we respond to all requests within 60 minutes.</p>
+            </div>
+          </aside>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <span>© 2025 Ruzik Appliance Repair & Handyman Services · Atlanta, GA</span>
+        <span>Serving Fulton, DeKalb, Cobb & Gwinnett Counties</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/form.js"></script>
+</body>
+</html>

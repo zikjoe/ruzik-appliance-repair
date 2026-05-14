@@ -1,0 +1,91 @@
+/* ============================================================
+   ABOUT PAGE STYLES
+   ============================================================ */
+
+.about-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.about-photo-wrap {
+  position: sticky;
+  top: 88px;
+}
+
+.about-photo-placeholder {
+  width: 100%;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, var(--color-primary), #1a3a6e);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.05em;
+}
+
+/* Replace the placeholder with a real photo:
+   .about-photo-placeholder {
+     background-image: url('assets/images/team/isaac.jpg');
+     background-size: cover;
+     background-position: center top;
+   }
+*/
+
+.about-content .section-header__label { margin-bottom: 0.5rem; }
+
+.about-values {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-border);
+}
+
+.about-value {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.about-value__icon { font-size: 1.5rem; }
+.about-value strong { font-size: 0.95rem; color: var(--color-primary); }
+.about-value p { font-size: 0.85rem; color: var(--color-text-muted); margin: 0; }
+
+/* Stats row */
+.about-stat {
+  text-align: center;
+  padding: var(--space-4);
+  background: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.about-stat__num {
+  font-family: var(--font-display);
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.about-stat__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 900px) {
+  .about-layout { grid-template-columns: 1fr; }
+  .about-photo-wrap { position: static; max-width: 240px; margin: 0 auto; }
+  .about-values { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,111 @@
+/* ============================================================
+   SERVICES PAGE STYLES
+   ============================================================ */
+
+/* Services list — used on /services.html */
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.service-row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: var(--space-4);
+  align-items: start;
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.service-row:last-child { border-bottom: none; padding-bottom: 0; }
+
+.service-row__icon {
+  font-size: 3rem;
+  line-height: 1;
+  padding-top: 0.25rem;
+}
+
+.service-row__content h2 {
+  font-size: 1.6rem;
+  margin-bottom: var(--space-1);
+}
+
+.service-row__content h2 a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.service-row__content h2 a:hover { color: var(--color-accent); }
+
+.service-row__content p {
+  color: var(--color-text-muted);
+  max-width: 680px;
+  margin-bottom: var(--space-2);
+}
+
+.service-row__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: var(--space-3);
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--color-light);
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* Individual service page hero override */
+.service-page-hero {
+  background-color: var(--color-primary);
+  padding: var(--space-5) 0;
+}
+
+/* Common issues list */
+.issues-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.issue-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: var(--space-2);
+  background: var(--color-light);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-border);
+}
+
+.issue-item__icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.issue-item__text strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--color-primary);
+  margin-bottom: 0.15rem;
+}
+
+.issue-item__text span {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 700px) {
+  .service-row { grid-template-columns: 1fr; gap: var(--space-2); }
+  .service-row__icon { font-size: 2rem; }
+  .issues-grid { grid-template-columns: 1fr; }
+}

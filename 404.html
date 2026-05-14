@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Page Not Found | Ruzik Appliance Repair</title>
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="/assets/css/main.css" />
+  <link rel="stylesheet" href="/assets/css/components.css" />
+  <style>
+    .not-found {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: var(--space-7) var(--space-3);
+    }
+    .not-found__code {
+      font-family: var(--font-display);
+      font-size: 8rem;
+      font-weight: 800;
+      color: var(--color-accent);
+      line-height: 1;
+      opacity: 0.3;
+    }
+    .not-found__title { margin: var(--space-2) 0 var(--space-1); }
+    .not-found__actions { display: flex; gap: var(--space-2); justify-content: center; margin-top: var(--space-3); flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav__inner">
+      <a href="/" class="nav__logo">
+        <div class="nav__logo-mark">R</div>
+        <div class="nav__logo-text"><span class="nav__logo-name">Ruzik Repair</span></div>
+      </a>
+    </div>
+  </nav>
+  <main>
+    <div class="not-found">
+      <div>
+        <div class="not-found__code">404</div>
+        <h1 class="not-found__title">Page Not Found</h1>
+        <p class="text-muted">That page doesn't exist. Let's get you back on track.</p>
+        <div class="not-found__actions">
+          <a href="/" class="btn btn--primary">Go Home</a>
+          <a href="contact.html" class="btn btn--outline">Request Service</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
