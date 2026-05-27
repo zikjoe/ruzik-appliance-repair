@@ -1,26 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Core pages -->
-  <url><loc>https://www.ruzikappliancerepair.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/services</loc><priority>0.9</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/contact</loc><priority>0.9</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/about</loc><priority>0.7</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/service-area</loc><priority>0.8</priority></url>
+  <!-- ── CORE PAGES ──────────────────────────────────────── -->
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/services</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/contact</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/service-area</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/about</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
-  <!-- Service pages -->
-  <url><loc>https://www.ruzikappliancerepair.com/services/dryer-repair</loc><priority>0.9</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/services/dishwasher-repair</loc><priority>0.9</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/services/washer-repair</loc><priority>0.9</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/services/stove-repair</loc><priority>0.9</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/services/microwave-repair</loc><priority>0.8</priority></url>
+  <!-- ── SERVICE PAGES ───────────────────────────────────── -->
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/services/dryer-repair</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/services/dishwasher-repair</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/services/washer-repair</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/services/stove-repair</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/services/microwave-repair</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
-  <!-- Brand pages -->
-  <url><loc>https://www.ruzikappliancerepair.com/brands/lg</loc><priority>0.7</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/brands/ge</loc><priority>0.7</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/brands/frigidaire</loc><priority>0.7</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/brands/whirlpool</loc><priority>0.7</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/brands/samsung</loc><priority>0.7</priority></url>
-  <url><loc>https://www.ruzikappliancerepair.com/brands/maytag</loc><priority>0.7</priority></url>
+  <!-- ── BRAND PAGES ─────────────────────────────────────── -->
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/brands/lg</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/brands/ge</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/brands/frigidaire</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/brands/whirlpool</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/brands/samsung</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.ruzikappliancerepair.com/brands/maytag</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 
 </urlset>
