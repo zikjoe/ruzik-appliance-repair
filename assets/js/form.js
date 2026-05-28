@@ -1,6 +1,7 @@
 /* ============================================================
    RUZIK APPLIANCE REPAIR — FORM JS
-   Lead capture form validation and submission
+   Handles validation, AJAX submission to Netlify Forms,
+   and redirect to thank-you page on success.
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -9,49 +10,63 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!form) return;
 
   const submitBtn = form.querySelector('[type="submit"]');
-  const successMsg = document.getElementById('form-success');
-  const errorMsg = document.getElementById('form-error');
+  const errorMsg  = document.getElementById('form-error');
 
   // ── VALIDATION RULES ───────────────────────────────────────
+  // Keys match the `name` attribute of each field.
   const validators = {
-    name: value => value.trim().length >= 2,
-    phone: value => /^[\d\s\(\)\-\+]{10,}$/.test(value.trim()),
-    email: value => !value || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value), // optional
-    appliance: value => value !== '',
-    message: value => value.trim().length >= 10,
+    name:           v => v.trim().length >= 2,
+    phone:          v => /^[\d\s\(\)\-\+]{10,}$/.test(v.trim()),
+    email:          v => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), // optional
+    'service-type': () => !!form.querySelector('[name="service-type"]:checked'),
+    appliance:      v => v !== '',
+    message:        v => v.trim().length >= 10,
+    zip:            v => /^\d{5}$/.test(v.trim()),
   };
 
   const errorMessages = {
-    name: 'Please enter your full name.',
-    phone: 'Please enter a valid phone number.',
-    email: 'Please enter a valid email address.',
-    appliance: 'Please select the appliance type.',
-    message: 'Please describe the issue (at least 10 characters).',
+    name:           'Please enter your full name.',
+    phone:          'Please enter a valid phone number.',
+    email:          'Please enter a valid email address.',
+    'service-type': 'Please select Repair or Installation.',
+    appliance:      'Please select the appliance type.',
+    message:        'Please describe the issue (at least 10 characters).',
+    zip:            'Please enter a valid 5-digit ZIP code.',
   };
 
+  // ── SINGLE FIELD VALIDATION ────────────────────────────────
   function validateField(field) {
-    const name = field.name;
+    const name      = field.name;
     const validator = validators[name];
     if (!validator) return true;
 
-    const valid = validator(field.value);
+    const isRadio = field.type === 'radio';
+    const valid   = isRadio
+      ? !!form.querySelector(`[name="${name}"]:checked`)
+      : validator(field.value);
+
+    // Apply error/valid CSS classes (skip for radio buttons — style handled by CSS :has)
+    if (!isRadio) {
+      field.classList.toggle('input--error', !valid);
+      field.classList.toggle('input--valid',  valid && field.value !== '');
+    }
+
+    // Show or hide the error message span
     const errorEl = document.getElementById(`error-${name}`);
-
-    field.classList.toggle('input--error', !valid);
-    field.classList.toggle('input--valid', valid);
-
     if (errorEl) {
-      errorEl.textContent = valid ? '' : errorMessages[name];
+      errorEl.textContent  = valid ? '' : errorMessages[name];
       errorEl.style.display = valid ? 'none' : 'block';
     }
 
     return valid;
   }
 
-  // Validate on blur
+  // ── LIVE VALIDATION LISTENERS ──────────────────────────────
+  // Validate on blur; re-validate on input/change if field already has an error.
   form.querySelectorAll('input, select, textarea').forEach(field => {
-    field.addEventListener('blur', () => validateField(field));
-    field.addEventListener('input', () => {
+    field.addEventListener('blur',   () => validateField(field));
+    field.addEventListener('change', () => validateField(field));
+    field.addEventListener('input',  () => {
       if (field.classList.contains('input--error')) validateField(field);
     });
   });
@@ -60,42 +75,62 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Validate all fields
-    const fields = form.querySelectorAll('input[name], select[name], textarea[name]');
+    // Run validation on all fields, deduplicating radio groups
     let allValid = true;
-    fields.forEach(field => {
+    const checkedGroups = new Set();
+
+    form.querySelectorAll('input[name], select[name], textarea[name]').forEach(field => {
+      // Only validate the first radio in each named group
+      if (field.type === 'radio') {
+        if (checkedGroups.has(field.name)) return;
+        checkedGroups.add(field.name);
+      }
       if (!validateField(field)) allValid = false;
     });
 
-    if (!allValid) return;
+    if (!allValid) {
+      // Scroll to the first error so mobile users see it
+      const firstError = form.querySelector('.input--error, .form-error[style*="block"]');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
 
-    // Disable button and show loading state
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
+    // Show loading state
+    submitBtn.disabled    = true;
+    submitBtn.textContent = 'Sending…';
     if (errorMsg) errorMsg.style.display = 'none';
 
     try {
-      const data = new FormData(form);
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json' }
+      // Netlify Forms requires application/x-www-form-urlencoded for reliable AJAX.
+      // Do NOT use plain FormData — it can silently fail.
+      const body = new URLSearchParams(new FormData(form)).toString();
+
+      const response = await fetch('/', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body,
       });
 
       if (response.ok) {
-        form.style.display = 'none';
-        if (successMsg) successMsg.style.display = 'block';
-        // Fire GA event if available
+        // Fire GA lead event with appliance type as the label
         if (typeof gtag === 'function') {
-          gtag('event', 'lead_submitted', { event_category: 'contact_form' });
+          gtag('event', 'lead_submitted', {
+            event_category: 'contact_form',
+            event_label: form.querySelector('[name="appliance"]')?.value || 'unknown',
+            value: 1,
+          });
         }
+        // Redirect to thank-you page (this is where GA conversion is tracked)
+        window.location.href = '/thank-you.html';
       } else {
-        throw new Error('Server error');
+        throw new Error(`Netlify responded with status ${response.status}`);
       }
+
     } catch (err) {
+      console.error('Form submission error:', err);
       if (errorMsg) errorMsg.style.display = 'block';
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Send Request';
+      submitBtn.disabled    = false;
+      submitBtn.textContent = 'Send Service Request';
     }
   });
 
