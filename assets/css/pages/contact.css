@@ -183,3 +183,45 @@
   }
   .form-row { grid-template-columns: 1fr; }
 }
+
+/* ── RADIO GROUP — Service Type selector ───────────────────
+   Styled pill buttons for Repair / Installation choice      */
+.radio-group {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+/* Hide the native radio input visually but keep it accessible */
+.radio-label input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Highlight selected option */
+.radio-label:has(input:checked) {
+  border-color: var(--color-accent);
+  background: rgba(232, 80, 10, 0.07);
+  color: var(--color-accent);
+}
+
+.radio-label:hover {
+  border-color: var(--color-accent);
+}

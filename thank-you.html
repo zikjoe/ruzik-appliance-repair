@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Request Received | Ruzik Appliance Repair Atlanta, GA</title>
+  <meta name="description" content="Your appliance repair request has been received. We'll call you within the hour." />
+  <!-- Prevent this confirmation page from appearing in Google search results -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/animations.css" />
+  <style>
+    /* ── Thank-You page styles ─────────────────────────────── */
+    .thankyou-wrap {
+      min-height: 72vh;
+      display: flex;
+      align-items: center;
+      padding: var(--space-6) 0;
+    }
+    .thankyou-inner {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .thankyou-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(232, 80, 10, 0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.25rem;
+      margin: 0 auto var(--space-3);
+    }
+    .thankyou-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      color: var(--color-navy);
+      margin-bottom: var(--space-2);
+    }
+    .thankyou-sub {
+      font-size: 1.125rem;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-4);
+      line-height: 1.6;
+    }
+    .next-steps {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      text-align: left;
+      margin-bottom: var(--space-4);
+    }
+    .next-steps h2 {
+      font-size: 1.125rem;
+      margin-bottom: var(--space-3);
+      color: var(--color-navy);
+    }
+    .next-steps ol {
+      padding-left: 1.5rem;
+      margin: 0;
+    }
+    .next-steps li {
+      padding: var(--space-1) 0;
+      line-height: 1.6;
+      color: var(--color-text);
+    }
+    .next-steps li strong {
+      color: var(--color-navy);
+    }
+    .thankyou-cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-2);
+      margin-bottom: var(--space-4);
+    }
+    .thankyou-back {
+      color: var(--color-accent);
+      font-size: 0.9rem;
+    }
+    .thankyou-back:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-mark">R</div>
+        <div class="nav__logo-text">
+          <span class="nav__logo-name">Ruzik Repair</span>
+          <span class="nav__logo-sub">Atlanta, GA</span>
+        </div>
+      </a>
+      <ul class="nav__links">
+        <li><a href="index.html" class="nav__link">Home</a></li>
+        <li><a href="services.html" class="nav__link">Services</a></li>
+        <li><a href="service-area.html" class="nav__link">Service Area</a></li>
+        <li><a href="about.html" class="nav__link">About</a></li>
+        <li><a href="contact.html" class="nav__link">Contact</a></li>
+      </ul>
+      <div class="nav__cta">
+        <a href="tel:678-824-5161" class="nav__phone">678-824-5161</a>
+        <a href="contact.html" class="btn btn--primary btn--sm">Get a Quote</a>
+      </div>
+      <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="section thankyou-wrap">
+      <div class="container">
+        <div class="thankyou-inner reveal">
+
+          <!-- Confirmation icon -->
+          <div class="thankyou-icon">✓</div>
+
+          <h1 class="thankyou-title">Request Received!</h1>
+          <p class="thankyou-sub">
+            We got your service request and will call you within the hour to confirm your appointment.
+          </p>
+
+          <!-- What happens next -->
+          <div class="next-steps">
+            <h2>What happens next:</h2>
+            <ol>
+              <li>We review your request and <strong>confirm your ZIP is in our service area</strong></li>
+              <li>We call you within <strong>60 minutes</strong> during business hours (Mon–Sat, 8 AM–6 PM)</li>
+              <li>We book your appointment — <strong>same day or next day</strong> when available</li>
+              <li>Our technician arrives on time with the tools and parts to get the job done</li>
+            </ol>
+          </div>
+
+          <!-- Call to action -->
+          <div class="thankyou-cta-group">
+            <p style="color: var(--color-text-muted); font-size: 0.95rem;">Can't wait? Call or text us directly:</p>
+            <a href="tel:678-824-5161" class="btn btn--primary btn--lg">
+              📞 Call 678-824-5161
+            </a>
+          </div>
+
+          <a href="index.html" class="thankyou-back">← Back to homepage</a>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__bottom">
+        <span>© 2025–2026 Ruzik Appliance Repair & Installation Services · Atlanta, GA</span>
+        <span>Serving Fulton, DeKalb, Cobb & Gwinnett Counties</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+
+  <!-- Fire GA conversion on page load — this page only loads after a real submission -->
+  <script>
+    if (typeof gtag === 'function') {
+      gtag('event', 'conversion', {
+        event_category: 'lead',
+        event_label: 'thank_you_page_load',
+        value: 1,
+      });
+    }
+  </script>
+
+</body>
+</html>
