@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Contact | Ruzik Appliance Repair Atlanta, GA</title>
-  <meta name="description" content="Request appliance repair service in Atlanta, GA. Call or fill out our form for same-day or next-day service in Fulton County and surrounding areas." />
+  <meta name="description"
+    content="Request appliance repair service in Atlanta, GA. Call or fill out our form for same-day or next-day service in Fulton County and surrounding areas." />
   <link rel="canonical" href="https://www.ruzikappliancerepair.com/contact" />
   <link rel="stylesheet" href="assets/css/main.css" />
   <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="stylesheet" href="assets/css/animations.css" />
   <link rel="stylesheet" href="assets/css/pages/contact.css" />
 </head>
+
 <body>
 
   <nav class="nav">
@@ -27,6 +30,7 @@
         <li><a href="services.html" class="nav__link">Services</a></li>
         <li><a href="service-area.html" class="nav__link">Service Area</a></li>
         <li><a href="about.html" class="nav__link">About</a></li>
+        <li><a href="blog/index.html" class="nav__link">Blog</a></li>
         <li><a href="contact.html" class="nav__link nav__link--active">Contact</a></li>
       </ul>
       <div class="nav__cta">
@@ -59,7 +63,8 @@
           <!-- Form -->
           <div class="contact-form-wrap reveal">
             <h2>Tell Us About Your Appliance</h2>
-            <p class="text-muted" style="margin-bottom: var(--space-3)">We'll get back to you within the hour to confirm your appointment.</p>
+            <p class="text-muted" style="margin-bottom: var(--space-3)">We'll get back to you within the hour to confirm
+              your appointment.</p>
 
             <!-- Success message (hidden until form submits) -->
             <div id="form-success" class="form-message form-message--success" style="display:none">
@@ -72,14 +77,8 @@
             </div>
 
             <!-- The form — action points to Netlify Forms -->
-            <form
-              id="contact-form"
-              name="service-request"
-              method="POST"
-              action="/"
-              data-netlify="true"
-              netlify-honeypot="bot-field"
-            >
+            <form id="contact-form" name="service-request" method="POST" action="/" data-netlify="true"
+              netlify-honeypot="bot-field">
               <!-- Netlify hidden fields -->
               <input type="hidden" name="form-name" value="service-request" />
               <p style="display:none"><input name="bot-field" /></p>
@@ -160,13 +159,16 @@
 
               <div class="form-group">
                 <label for="message">Describe the Problem *</label>
-                <textarea id="message" name="message" rows="4" placeholder="e.g. Dryer runs but won't heat. Replaced thermal fuse 3 months ago and it blew again." required></textarea>
+                <textarea id="message" name="message" rows="4"
+                  placeholder="e.g. Dryer runs but won't heat. Replaced thermal fuse 3 months ago and it blew again."
+                  required></textarea>
                 <span id="error-message" class="form-error" style="display:none"></span>
               </div>
 
               <div class="form-group">
                 <label for="zip">ZIP Code *</label>
-                <input type="text" id="zip" name="zip" placeholder="30301" maxlength="5" style="max-width: 160px" required />
+                <input type="text" id="zip" name="zip" placeholder="30301" maxlength="5" style="max-width: 160px"
+                  required />
                 <small class="form-hint">We'll confirm we service your area</small>
                 <span id="error-zip" class="form-error" style="display:none"></span>
               </div>
@@ -186,7 +188,8 @@
                 Send Service Request
               </button>
 
-              <p class="form-disclaimer">By submitting, you agree to be contacted about your appliance repair request. We do not sell your information.</p>
+              <p class="form-disclaimer">By submitting, you agree to be contacted about your appliance repair request.
+                We do not sell your information.</p>
             </form>
           </div>
 
@@ -210,7 +213,8 @@
                 <li>✓ Marietta</li>
                 <li>✓ Surrounding Fulton County</li>
               </ul>
-              <a href="service-area.html" class="btn btn--outline btn--sm" style="margin-top:var(--space-2)">Full Service Area</a>
+              <a href="service-area.html" class="btn btn--outline btn--sm" style="margin-top:var(--space-2)">Full
+                Service Area</a>
             </div>
 
             <div class="contact-info-card contact-info-card--accent">
@@ -237,4 +241,5 @@
   <script src="assets/js/main.js"></script>
   <script src="assets/js/form.js?v=2"></script>
 </body>
+
 </html>

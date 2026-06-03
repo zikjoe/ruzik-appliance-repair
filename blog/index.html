@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- ============================================================
+       Blog Index — /blog/index.html
+       Lists all published blog posts as cards.
+       Add new posts here when you publish them.
+       ============================================================ -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO: title & description -->
+  <title>Appliance Repair Tips & Guides | Ruzik Appliance Repair Atlanta</title>
+  <meta name="description"
+    content="Free appliance repair guides for Atlanta homeowners. Learn what's wrong with your dryer, dishwasher, washer, or stove — and when to call a pro." />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://ruzikappliancerepair.com/blog/" />
+
+  <!-- Open Graph (Facebook / link previews) -->
+  <meta property="og:title" content="Appliance Repair Tips & Guides | Ruzik Appliance Repair" />
+  <meta property="og:description"
+    content="Free repair guides written by Atlanta appliance technicians. Diagnose the problem yourself or call us for same-day service." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ruzikappliancerepair.com/blog/" />
+
+  <!-- ── Fonts ─────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+
+  <!-- ── Stylesheets ───────────────────────────── -->
+  <!-- Link these to your existing main.css and components.css -->
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/pages/blog.css" />
+
+  <!-- ── Schema: Blog ─────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Ruzik Appliance Repair Blog",
+    "description": "Appliance repair tips and guides for Atlanta homeowners",
+    "url": "https://ruzikappliancerepair.com/blog/",
+    "publisher": {
+      "@type": "LocalBusiness",
+      "name": "Ruzik Appliance Repair & Installation Services",
+      "telephone": "678-824-5161",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Atlanta",
+        "addressRegion": "GA"
+      }
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <!-- ── Site Navigation ───────────────────────────────────────
+       Paste your existing <nav> component here from index.html
+       ──────────────────────────────────────────────────────── -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="container nav__inner">
+      <a href="../index.html" class="nav__logo" aria-label="Ruzik Appliance Repair home">
+        <div class="nav__logo-mark">R</div>
+        <div class="nav__logo-text">
+          <span class="nav__logo-name">Ruzik Repair</span>
+          <span class="nav__logo-sub">Atlanta, GA</span>
+        </div>
+      </a>
+
+      <ul class="nav__links" role="list">
+        <li><a href="../index.html" class="nav__link">Home</a></li>
+        <li><a href="../services.html" class="nav__link">Services</a></li>
+        <li><a href="../service-area.html" class="nav__link">Service Area</a></li>
+        <li><a href="../about.html" class="nav__link">About</a></li>
+        <li><a href="index.html" class="nav__link nav__link--active">Blog</a></li>
+        <li><a href="../contact.html" class="nav__link">Contact</a></li>
+      </ul>
+
+      <div class="nav__cta">
+        <a href="tel:678-824-5161" class="nav__phone" aria-label="Call us">678-824-5161</a>
+        <a href="../contact.html" class="btn btn--primary btn--sm">Get a Quote</a>
+      </div>
+
+      <button class="nav__toggle" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── Blog Hero ──────────────────────────────────────────── -->
+  <section class="blog-hero">
+    <p class="blog-hero__eyebrow">Appliance Repair Knowledge Base</p>
+    <h1 class="blog-hero__title">Tips, Guides &amp; Fixes</h1>
+    <p class="blog-hero__subtitle">
+      Free repair guides written by our Atlanta technicians. Diagnose common appliance problems and know when it's time
+      to call a pro.
+    </p>
+  </section>
+
+  <!-- ── Blog Post Grid ─────────────────────────────────────── -->
+  <main class="blog-index" id="main-content">
+    <div class="blog-index__grid">
+
+      <!-- ── Post Card 1 ──────────────────────────────────────
+           Update href, title, excerpt, and date when you publish.
+           Alternate .blog-card__bar and .blog-card__bar--primary
+           to give cards visual rhythm.
+           ─────────────────────────────────────────────────── -->
+      <a class="blog-card" href="dryer-thermal-fuse-keeps-blowing.html">
+        <div class="blog-card__bar"></div>
+        <div class="blog-card__body">
+          <p class="blog-card__category">Dryer Repair</p>
+          <h2 class="blog-card__title">Why Does My Dryer Keep Blowing the Thermal Fuse?</h2>
+          <p class="blog-card__excerpt">If your dryer shuts off mid-cycle or won't start at all, a blown thermal fuse is
+            often the reason — and it almost always points to a deeper problem.</p>
+          <div class="blog-card__meta">
+            <span>5 min read</span>
+            <span>·</span>
+            <span>Dryer Repair</span>
+          </div>
+          <span class="blog-card__read-more">Read guide →</span>
+        </div>
+      </a>
+
+      <!-- ── Post Card 2 (placeholder — publish when ready) ── -->
+      <a class="blog-card" href="appliance-repair-cost-atlanta.html">
+        <div class="blog-card__bar blog-card__bar--primary"></div>
+        <div class="blog-card__body">
+          <p class="blog-card__category">Pricing Guide</p>
+          <h2 class="blog-card__title">How Much Does Appliance Repair Cost in Atlanta?</h2>
+          <p class="blog-card__excerpt">Wondering if repair is worth it before calling a tech? Here's a realistic
+            breakdown of costs by appliance type across the Atlanta metro.</p>
+          <div class="blog-card__meta">
+            <span>6 min read</span>
+            <span>·</span>
+            <span>Cost &amp; Pricing</span>
+          </div>
+          <span class="blog-card__read-more">Read guide →</span>
+        </div>
+      </a>
+
+      <!-- ── Post Card 3 (placeholder) ──────────────────────── -->
+      <a class="blog-card" href="ge-dishwasher-not-draining.html">
+        <div class="blog-card__bar"></div>
+        <div class="blog-card__body">
+          <p class="blog-card__category">Dishwasher Repair</p>
+          <h2 class="blog-card__title">GE Dishwasher Not Draining? Here's Why and How to Fix It</h2>
+          <p class="blog-card__excerpt">Standing water at the bottom of your GE dishwasher after a cycle usually comes
+            down to one of four issues. Here's how to find out which one.</p>
+          <div class="blog-card__meta">
+            <span>5 min read</span>
+            <span>·</span>
+            <span>Dishwasher Repair</span>
+          </div>
+          <span class="blog-card__read-more">Read guide →</span>
+        </div>
+      </a>
+
+      <!-- ── Post Card 4 (placeholder) ──────────────────────── -->
+      <a class="blog-card" href="lg-dryer-not-heating.html">
+        <div class="blog-card__bar blog-card__bar--primary"></div>
+        <div class="blog-card__body">
+          <p class="blog-card__category">Dryer Repair</p>
+          <h2 class="blog-card__title">LG Dryer Not Heating — Common Causes &amp; What To Do</h2>
+          <p class="blog-card__excerpt">An LG dryer that tumbles but produces no heat has a short list of likely
+            culprits. Find out which part is failing and whether you can fix it yourself.</p>
+          <div class="blog-card__meta">
+            <span>5 min read</span>
+            <span>·</span>
+            <span>Dryer Repair</span>
+          </div>
+          <span class="blog-card__read-more">Read guide →</span>
+        </div>
+      </a>
+
+      <!-- ── Post Card 5 (placeholder) ──────────────────────── -->
+      <a class="blog-card" href="repair-or-replace-appliance.html">
+        <div class="blog-card__bar"></div>
+        <div class="blog-card__body">
+          <p class="blog-card__category">Buying Guide</p>
+          <h2 class="blog-card__title">Should I Repair or Replace My Appliance? A Practical Guide</h2>
+          <p class="blog-card__excerpt">The 50% rule is a starting point, but it's not the whole picture. Here's how to
+            make the repair-vs-replace decision with confidence.</p>
+          <div class="blog-card__meta">
+            <span>4 min read</span>
+            <span>·</span>
+            <span>Decision Guide</span>
+          </div>
+          <span class="blog-card__read-more">Read guide →</span>
+        </div>
+      </a>
+
+      <!-- ── Post Card 6 (placeholder) ──────────────────────── -->
+      <a class="blog-card" href="samsung-washer-not-spinning.html">
+        <div class="blog-card__bar blog-card__bar--primary"></div>
+        <div class="blog-card__body">
+          <p class="blog-card__category">Washer Repair</p>
+          <h2 class="blog-card__title">Samsung Washer Not Spinning — Causes, Fixes &amp; Error Codes</h2>
+          <p class="blog-card__excerpt">A Samsung washer that won't spin leaves you with soaking wet clothes. Learn
+            what's triggering the issue and how to get the drum moving again.</p>
+          <div class="blog-card__meta">
+            <span>5 min read</span>
+            <span>·</span>
+            <span>Washer Repair</span>
+          </div>
+          <span class="blog-card__read-more">Read guide →</span>
+        </div>
+      </a>
+
+      <!-- ──────────────────────────────────────────────────────
+           ADD NEW POST CARDS HERE as you publish more posts.
+           Copy any card block above, update the href, title,
+           excerpt, category, and read time.
+           ────────────────────────────────────────────────────── -->
+
+    </div>
+  </main>
+
+  <!-- ── Bottom CTA ─────────────────────────────────────────── -->
+  <section style="background: #f7f8fa; padding: var(--space-6) var(--space-4); text-align: center;">
+    <p
+      style="font-family: var(--font-display); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); margin-bottom: var(--space-2);">
+      Atlanta Metro — Fast Response</p>
+    <h2
+      style="font-family: var(--font-display); font-size: clamp(1.5rem, 3.5vw, 2.25rem); color: var(--color-primary); margin-bottom: var(--space-3); font-weight: 700;">
+      Tried the Guide? Still Not Fixed?</h2>
+    <p style="color: #4a5568; max-width: 480px; margin: 0 auto var(--space-4); line-height: 1.6;">Ruzik Appliance Repair
+      serves Fulton, DeKalb, Cobb, and Gwinnett counties. Most jobs diagnosed same day.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); justify-content: center;">
+      <a href="tel:6788245161" class="btn btn--primary">Call 678-824-5161</a>
+      <a href="../contact.html" class="btn btn--outline">Get a Free Quote</a>
+    </div>
+  </section>
+
+  <!-- ── Site Footer ────────────────────────────────────────────
+       Paste your existing <footer> component here from index.html
+       ──────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <div class="nav__logo">
+            <div class="nav__logo-mark">R</div>
+            <div class="nav__logo-text">
+              <span class="nav__logo-name">Ruzik Repair</span>
+            </div>
+          </div>
+          <p>Professional appliance repair serving Atlanta and Fulton County. Fast, honest, and reliable service from a
+            certified technician.</p>
+          <br />
+          <a href="tel:678-824-5161" class="btn btn--phone">678-824-5161</a>
+        </div>
+
+        <div>
+          <div class="footer__heading">Services</div>
+          <ul class="footer__links">
+            <li><a href="../services/dryer-repair.html">Dryer Repair</a></li>
+            <li><a href="../services/dishwasher-repair.html">Dishwasher Repair</a></li>
+            <li><a href="../services/washer-repair.html">Washer Repair</a></li>
+            <li><a href="../services/stove-repair.html">Stove & Range</a></li>
+            <li><a href="../services/microwave-repair.html">Microwave Repair</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__heading">Brands</div>
+          <ul class="footer__links">
+            <li><a href="../brands/lg.html">LG</a></li>
+            <li><a href="../brands/ge.html">GE</a></li>
+            <li><a href="../brands/frigidaire.html">Frigidaire</a></li>
+            <li><a href="../brands/whirlpool.html">Whirlpool</a></li>
+            <li><a href="../brands/samsung.html">Samsung</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="footer__heading">Company</div>
+          <ul class="footer__links">
+            <li><a href="../about.html">About Us</a></li>
+            <li><a href="../service-area.html">Service Area</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+            <li><a href="index.html">Blog</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>© 2025–2026 Ruzik Appliance Repair & Installation Services · Atlanta, GA</span>
+        <span>Serving Fulton, DeKalb, Cobb & Gwinnett Counties</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── Scripts ───────────────────────────────────────────── -->
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>
