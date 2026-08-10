@@ -1,0 +1,15 @@
+{
+  "_source": "services/*.html — these are the published estimate ranges shown on the public site, not quotes. The AI may recite these ranges only; it may never promise a final price before technician diagnosis (see authority-matrix.md).",
+  "diagnosticFeeNote": "Diagnostic/service-call fee applies and is credited toward the repair if the customer proceeds. Exact current fee is an owner-set number to confirm in ownership-and-access.md — do not hardcode a diagnostic dollar figure the owner hasn't confirmed for the pilot.",
+  "services": {
+    "dryer": { "label": "Dryer Repair", "estimateLowCents": 7500, "estimateHighCents": 25000 },
+    "dishwasher": { "label": "Dishwasher Repair", "estimateLowCents": 8000, "estimateHighCents": 28000 },
+    "washer": { "label": "Washer / Washing Machine Repair", "estimateLowCents": 9000, "estimateHighCents": 30000 },
+    "stove": { "label": "Stove / Range / Oven Repair", "estimateLowCents": 8000, "estimateHighCents": 30000 },
+    "microwave": { "label": "Microwave Repair (countertop)", "estimateLowCents": 6000, "estimateHighCents": 20000 },
+    "microwave_built_in": { "label": "Microwave Repair (over-the-range / built-in)", "estimateLowCents": 6000, "estimateHighCents": 15000 },
+    "refrigerator": { "label": "Refrigerator Repair", "estimateLowCents": null, "estimateHighCents": null, "note": "Listed as supported on intake form but no published range exists yet — treat missing range as needs_human_review, do not invent a number." },
+    "other": { "label": "Other / Handyman", "estimateLowCents": null, "estimateHighCents": null, "note": "No published range — always route to human for scoping." }
+  },
+  "brandsServiced": ["LG", "GE", "Frigidaire", "Whirlpool", "Samsung", "Maytag", "Kenmore", "Bosch", "Electrolux"]
+}

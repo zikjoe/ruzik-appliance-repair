@@ -1,0 +1,46 @@
+{
+  "_source": "Job description § Customer Communication — every template must identify the company as Ruzik and must not claim to be human if directly asked.",
+  "templates": {
+    "initial_acknowledgment": {
+      "vars": ["customerFirstName"],
+      "body": "Hi {{customerFirstName}}, thanks for reaching out to Ruzik Appliance Repair! We've got your request and will follow up shortly with next steps."
+    },
+    "information_request": {
+      "vars": ["customerFirstName", "missingFields"],
+      "body": "Hi {{customerFirstName}}, this is Ruzik Appliance Repair. To get you scheduled we just need a bit more info: {{missingFields}}. Reply here whenever you get a chance."
+    },
+    "appointment_confirmation": {
+      "vars": ["customerFirstName", "window", "technicianName"],
+      "body": "Hi {{customerFirstName}}, you're confirmed with Ruzik Appliance Repair for {{window}}. {{technicianName}} will be your technician. Reply RESCHEDULE if this window no longer works."
+    },
+    "appointment_reminder": {
+      "vars": ["customerFirstName", "window"],
+      "body": "Reminder from Ruzik Appliance Repair: your appointment is {{window}}. Reply RESCHEDULE if you need to change it."
+    },
+    "technician_on_the_way": {
+      "vars": ["customerFirstName", "technicianName", "etaMinutes"],
+      "body": "Hi {{customerFirstName}}, this is Ruzik Appliance Repair — {{technicianName}} is on the way, ETA about {{etaMinutes}} minutes."
+    },
+    "rescheduling": {
+      "vars": ["customerFirstName", "newWindow"],
+      "body": "Hi {{customerFirstName}}, Ruzik Appliance Repair here — you're rescheduled to {{newWindow}}. Let us know if that doesn't work."
+    },
+    "waiting_for_parts": {
+      "vars": ["customerFirstName", "partDescription", "expectedUpdateDate"],
+      "body": "Hi {{customerFirstName}}, update from Ruzik Appliance Repair: we're waiting on {{partDescription}} for your repair. We'll update you again by {{expectedUpdateDate}}."
+    },
+    "completion_followup": {
+      "vars": ["customerFirstName"],
+      "body": "Hi {{customerFirstName}}, thanks for choosing Ruzik Appliance Repair! Your service is complete. Let us know if you have any questions about the work performed."
+    },
+    "review_request": {
+      "vars": ["customerFirstName", "reviewLink"],
+      "body": "Hi {{customerFirstName}}, glad we could help! If you have a minute, a review means a lot to us as a small business: {{reviewLink}} — Ruzik Appliance Repair"
+    },
+    "warranty_followup": {
+      "vars": ["customerFirstName", "warrantyExpires"],
+      "body": "Hi {{customerFirstName}}, this is Ruzik Appliance Repair checking in — your repair is still under warranty until {{warrantyExpires}}. Let us know if the issue has returned."
+    }
+  },
+  "disclosureRule": "If a customer directly asks whether they are talking to a person or an AI, the response must truthfully state it is an automated assistant for Ruzik Appliance Repair and offer to connect them to Isaac. This is a hardcoded non-negotiable, not a template — enforced in src/guardrails, not skippable by prompting."
+}

@@ -1,0 +1,61 @@
+# Ruzik AI Dispatch & Customer Care Coordinator
+
+A narrow, single-workflow AI pilot for Ruzik Appliance Repair — lead intake,
+qualification, scheduling assistance, customer/technician communication, job
+closeout, and daily reporting. Built as a 30-day **copilot-mode** pilot per
+the job description this repo was scoped from: one workflow, a hard
+allow-list of actions, mandatory human escalation, full audit logging, a
+manual pause switch, and nothing sent to a real customer without
+review-and-approve first.
+
+This is a companion project to the static marketing site in the repo root —
+it does not modify that site's code. See `docs/go-live-checklist.md` for the
+one config step (a Netlify outgoing webhook) that connects them.
+
+## Quick start
+
+```bash
+npm install
+cp .env.example .env   # fill in ANTHROPIC_API_KEY if you want SMS field extraction
+npm test                # runs the full pilot acceptance suite — no API key required
+npm run build && npm start
+# or: npm run dev
+```
+
+Server listens on `:3000` by default (`PORT` env var to change).
+
+## What's here
+
+| Path | What |
+|---|---|
+| `src/intake/` | Lead intake: field extraction (deterministic for the website form, Claude-assisted for free-text SMS), dedup |
+| `src/qualify/` | Service-area / service-type qualification |
+| `src/guardrails/` | The authority allow-list, forbidden-action list, escalation-trigger classifiers, safety-hazard scanner, pause-switch gate |
+| `src/scheduling/` | Approved-window offering, technician matching, job summaries, cancellation/reschedule handling |
+| `src/messaging/` | The 10 approved message templates, copilot-mode drafting + approval/send/reject, bot-disclosure rule |
+| `src/closeout/` | Job-closeout checklist gate |
+| `src/reporting/` | Daily summary metrics |
+| `src/audit/` | Audit log, pause switch, full data export |
+| `src/lib/orchestrate.ts` | Ties the above together per inbound channel |
+| `src/server.ts` | Express app: webhook + admin endpoints |
+| `config/*.json` | Every tunable the AI operates within — price list, service area, templates, escalation keywords, spending caps. Seeded from the real site content in the repo root, not placeholders. |
+| `test/acceptance/` | The 25-50 scripted scenarios required by the Pilot Acceptance Test — `npm test` |
+| `docs/` | Pilot plan, authority matrix, metrics definitions, ownership checklist, runbook, go-live steps |
+
+## Explicitly not built (Phase-One Channels)
+
+Voice calls, autonomous pricing, payments, contractor payouts, and parts
+purchasing are out of scope for this pilot by design — see the job
+description's Phase-One Channels section and `docs/pilot-plan.md`.
+
+## Admin endpoints
+
+All under `/admin/*`, protected by the `ADMIN_TOKEN` env var (`x-admin-token`
+header) once set — unset locally for pilot testing only.
+
+- `GET /admin/approvals` — pending messages + open escalations
+- `POST /admin/messages/:id/approve` / `/reject`
+- `POST /admin/pause` / `/resume`
+- `GET /admin/export` — full data dump
+- `GET /admin/report?format=text` — daily summary
+- `GET /admin/jobs/:id` — full job thread

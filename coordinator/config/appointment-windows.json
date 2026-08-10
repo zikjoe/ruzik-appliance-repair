@@ -1,0 +1,10 @@
+{
+  "_note": "The AI may only ever offer windows from this list — job description § 3 'Offer only approved appointment windows.' Owner edits this file to change what's offerable; the AI cannot invent a window.",
+  "daily": [
+    { "key": "morning", "label": "Morning (8 AM - 12 PM)" },
+    { "key": "afternoon", "label": "Afternoon (12 PM - 4 PM)" },
+    { "key": "evening", "label": "Evening (4 PM - 6 PM)" }
+  ],
+  "workingDays": ["mon", "tue", "wed", "thu", "fri", "sat"],
+  "offerDaysAhead": 5
+}
