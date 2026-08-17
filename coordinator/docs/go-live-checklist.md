@@ -31,6 +31,12 @@ submission.
   configured in the Anthropic console — separate from `config/spending-limits.json`,
   which is this app's own internal cap).
 - Set `ADMIN_TOKEN` to a freshly generated secret (`openssl rand -hex 32`).
+- Set `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS` and/or
+  `TWILIO_ACCOUNT_SID`/`TWILIO_AUTH_TOKEN`/`TWILIO_FROM_NUMBER` so real-time
+  owner alerts (`src/notify`) actually send instead of just logging a
+  "skipped, no credentials" audit entry — see `.env.example` for the Gmail
+  app-password shortcut on the email side. Recipient email/phone are set in
+  `config/notifications.json`, not env vars.
 - Confirm `.env` is not committed (`.gitignore` already covers it).
 
 ## 4. Hosting

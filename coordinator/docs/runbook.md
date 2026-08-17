@@ -40,6 +40,17 @@ or `$COORDINATOR_DB_PATH`) — it's a single file, trivial to copy/version.
 Do this on a schedule (e.g. daily cron) once live; nothing in this repo
 automates that yet.
 
+## "I'm not getting owner alerts"
+
+Every alert attempt is audit-logged regardless of outcome — check
+`GET /admin/export` (or query `audit_log` directly) for `alert_email_sent`/
+`alert_email_skipped`/`alert_email_failed` and the `alert_sms_*` equivalents.
+`_skipped` means the SMTP/Twilio env vars aren't set yet (expected until
+go-live — see `docs/go-live-checklist.md`); `_failed` means credentials are
+set but the send itself errored (check the `detail` column). Alerts never
+block or fail the underlying job/escalation/message action either way — see
+`src/notify/index.ts`.
+
 ## Spending cap tripped
 
 If `config/spending-limits.json`'s `dailyClaudeApiCallCap` is hit,

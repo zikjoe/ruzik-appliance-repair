@@ -2,6 +2,7 @@ import { db } from '../db/index.js';
 import { messageTemplates, business } from '../lib/config.js';
 import { logAction } from '../audit/index.js';
 import { checkAction } from '../guardrails/index.js';
+import { fireAlert } from '../notify/index.js';
 
 const BOT_QUESTION_PATTERNS = [
   /are you (a )?(bot|robot|ai|human|real person|person)/i,
@@ -62,6 +63,14 @@ export function draftDisclosureMessage(opts: {
     recordId: messageId,
     outcome: check.allowed ? 'allowed' : 'blocked',
   });
+  if (check.allowed) {
+    fireAlert({
+      urgency: 'approval',
+      subject: `Disclosure message awaiting approval (job #${opts.jobId})`,
+      body,
+      jobId: opts.jobId,
+    });
+  }
   return { messageId, body, status: check.allowed ? 'pending_approval' : 'blocked' };
 }
 
@@ -102,6 +111,15 @@ export function draftTemplateMessage(opts: {
     outcome: check.allowed ? 'allowed' : 'blocked',
     detail: opts.templateKey,
   });
+
+  if (check.allowed) {
+    fireAlert({
+      urgency: 'approval',
+      subject: `Message awaiting approval — ${opts.templateKey} (job #${opts.jobId})`,
+      body,
+      jobId: opts.jobId,
+    });
+  }
 
   return { messageId, body, status: check.allowed ? 'pending_approval' : 'blocked' };
 }

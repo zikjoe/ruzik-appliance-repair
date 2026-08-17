@@ -1,6 +1,7 @@
 import { escalationTriggers } from '../lib/config.js';
 import { db } from '../db/index.js';
 import { logAction, isPaused, type Actor } from '../audit/index.js';
+import { fireAlert } from '../notify/index.js';
 
 export type EscalationKey = (typeof escalationTriggers.escalationTriggers)[number]['key'] | 'safety_hazard';
 
@@ -130,6 +131,12 @@ export function escalate(opts: {
     recordId: opts.jobId,
     outcome: 'escalated',
     detail: `${opts.trigger}${opts.detail ? `: ${opts.detail}` : ''}`,
+  });
+  fireAlert({
+    urgency: 'escalation',
+    subject: `Escalation — ${opts.trigger}${opts.jobId ? ` (job #${opts.jobId})` : ''}`,
+    body: `${opts.trigger}${opts.detail ? `: ${opts.detail}` : ''}`,
+    jobId: opts.jobId,
   });
   return result.lastInsertRowid as number;
 }

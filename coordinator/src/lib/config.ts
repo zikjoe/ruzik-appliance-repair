@@ -59,6 +59,12 @@ export interface AppointmentWindowsConfig {
   offerDaysAhead: number;
 }
 
+export interface NotificationsConfig {
+  recipientEmail: string;
+  recipientPhone: string;
+  alertOn: { escalations: boolean; pendingApprovals: boolean };
+}
+
 export const business = loadJson<BusinessConfig>('business.json');
 export const serviceArea = loadJson<ServiceAreaConfig>('service-area.json');
 export const priceList = loadJson<PriceListConfig>('price-list.json');
@@ -66,3 +72,4 @@ export const escalationTriggers = loadJson<EscalationTriggersConfig>('escalation
 export const messageTemplates = loadJson<MessageTemplatesConfig>('message-templates.json');
 export const spendingLimits = loadJson<SpendingLimitsConfig>('spending-limits.json');
 export const appointmentWindows = loadJson<AppointmentWindowsConfig>('appointment-windows.json');
+export const notifications = loadJson<NotificationsConfig>('notifications.json');

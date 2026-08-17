@@ -36,6 +36,7 @@ Server listens on `:3000` by default (`PORT` env var to change).
 | `src/closeout/` | Job-closeout checklist gate |
 | `src/reporting/` | Daily summary metrics |
 | `src/audit/` | Audit log, pause switch, full data export |
+| `src/notify/` | Real-time owner alerts (email + SMS) on every escalation and every message that lands in the approval queue — no-ops with a logged reason until real SMTP/Twilio credentials are set |
 | `src/lib/orchestrate.ts` | Ties the above together per inbound channel |
 | `src/server.ts` | Express app: webhook + admin endpoints |
 | `config/*.json` | Every tunable the AI operates within — price list, service area, templates, escalation keywords, spending caps. Seeded from the real site content in the repo root, not placeholders. |
