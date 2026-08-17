@@ -1,0 +1,620 @@
+<title>Dispatch Blueprint</title>
+<style>
+  :root {
+    --paper: #E8EEF6;
+    --paper-raised: #F6F9FC;
+    --ink: #172A46;
+    --ink-soft: #3E5473;
+    --line: rgba(23, 42, 70, 0.22);
+    --stamp: #B94E2C;
+    --stamp-soft: rgba(185, 78, 44, 0.14);
+    --go: #3E7A57;
+    --go-soft: rgba(62, 122, 87, 0.14);
+    --hold: #B8791F;
+    --hold-soft: rgba(184, 121, 31, 0.16);
+    --stop: #AC3448;
+    --stop-soft: rgba(172, 52, 72, 0.12);
+    --mute: #5E7391;
+    --mute-soft: rgba(94, 115, 145, 0.12);
+    --font-display: ui-sans-serif, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "SFMono-Regular", "Roboto Mono", Menlo, Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0D2340;
+      --paper-raised: #123056;
+      --ink: #DCE7F5;
+      --ink-soft: #A9BEDC;
+      --line: rgba(220, 231, 245, 0.24);
+      --stamp: #E08256;
+      --stamp-soft: rgba(224, 130, 86, 0.16);
+      --go: #6FBE8E;
+      --go-soft: rgba(111, 190, 142, 0.16);
+      --hold: #E0AA4E;
+      --hold-soft: rgba(224, 170, 78, 0.18);
+      --stop: #E17888;
+      --stop-soft: rgba(225, 120, 136, 0.16);
+      --mute: #93AAD0;
+      --mute-soft: rgba(147, 170, 208, 0.14);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper: #0D2340;
+    --paper-raised: #123056;
+    --ink: #DCE7F5;
+    --ink-soft: #A9BEDC;
+    --line: rgba(220, 231, 245, 0.24);
+    --stamp: #E08256;
+    --stamp-soft: rgba(224, 130, 86, 0.16);
+    --go: #6FBE8E;
+    --go-soft: rgba(111, 190, 142, 0.16);
+    --hold: #E0AA4E;
+    --hold-soft: rgba(224, 170, 78, 0.18);
+    --stop: #E17888;
+    --stop-soft: rgba(225, 120, 136, 0.16);
+    --mute: #93AAD0;
+    --mute-soft: rgba(147, 170, 208, 0.14);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-display);
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  main, header, footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding-left: clamp(16px, 4vw, 40px);
+    padding-right: clamp(16px, 4vw, 40px);
+  }
+
+  header {
+    padding-top: clamp(28px, 5vw, 52px);
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--stamp);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 22px;
+    height: 1px;
+    background: var(--stamp);
+    display: inline-block;
+  }
+
+  h1 {
+    font-size: clamp(28px, 4.2vw, 42px);
+    line-height: 1.08;
+    margin: 0;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .dek {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 2px 0 6px;
+  }
+
+  .ticket-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 28px;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    padding-top: 6px;
+  }
+
+  .ticket-meta strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  main { padding-top: 30px; padding-bottom: 20px; }
+
+  figure { margin: 0; }
+
+  .scroll-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--paper-raised);
+    padding: 6px;
+  }
+
+  .scroll-wrap svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-width: 880px;
+  }
+
+  figcaption {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+    max-width: 72ch;
+    line-height: 1.5;
+  }
+
+  /* --- diagram node text --- */
+  .node-label {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .node-sub {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.01em;
+  }
+  .band-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.03em;
+  }
+  .arrow-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+  }
+  .group-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .node-box {
+    fill: var(--paper-raised);
+    stroke: var(--ink-soft);
+    stroke-width: 1.4;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .node-box:hover, .node-box:focus-visible { transform: translateY(-2px); }
+  .node.go .node-box { fill: var(--go-soft); stroke: var(--go); }
+  .node.hold .node-box { fill: var(--hold-soft); stroke: var(--hold); stroke-width: 2.2; }
+  .node.mute .node-box { fill: var(--mute-soft); stroke: var(--mute); }
+  .node.channel .node-box { fill: var(--paper-raised); stroke: var(--ink-soft); stroke-dasharray: 3 3; }
+  .node text { fill: var(--ink); pointer-events: none; }
+  .node:focus-visible .node-box { outline: none; stroke-width: 3; }
+  /* Data cards and owner-annex rows have no .node-box (plain/invisible rects),
+     so give every node group its own focus ring as a guaranteed fallback. */
+  .node:focus-visible { outline: 2px solid var(--stamp); outline-offset: 3px; border-radius: 6px; }
+  .data-card:hover rect, .data-card:focus-visible rect { stroke-width: 2; }
+
+  .conn-line { stroke: var(--ink-soft); stroke-width: 1.6; fill: none; }
+  .conn-stop { stroke: var(--stop); stroke-width: 1.8; fill: none; }
+  .conn-accent { stroke: var(--stamp); stroke-width: 1.4; fill: none; stroke-dasharray: 2 3; }
+  .conn-label { fill: var(--ink-soft); }
+  .conn-label.stop { fill: var(--stop); }
+  .conn-label.accent { fill: var(--stamp); }
+
+  .flow-anim { stroke-dasharray: 6 7; animation: dash-flow 5s linear infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .flow-anim { animation: none; }
+  }
+  @keyframes dash-flow { to { stroke-dashoffset: -130; } }
+
+  .band-rect { fill: var(--stamp-soft); stroke: var(--stamp); stroke-width: 1.2; stroke-dasharray: 5 4; }
+  .band-label { fill: var(--stamp); }
+
+  .lane-rect { fill: var(--stop-soft); stroke: var(--stop); stroke-width: 1.4; }
+  .lane-label { fill: var(--stop); }
+
+  .annex-rect { fill: var(--paper-raised); stroke: var(--mute); stroke-width: 1.4; }
+  .annex-title { fill: var(--ink); font-weight: 700; }
+  .annex-row { fill: var(--ink-soft); }
+  .annex-row .k { fill: var(--stamp); }
+
+  .data-card rect { fill: var(--mute-soft); stroke: var(--mute); stroke-width: 1.2; }
+  .data-card text { fill: var(--ink); }
+  .data-title { fill: var(--ink-soft); }
+
+  /* --- legend + detail panel (HTML) --- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    align-items: center;
+    margin-top: 22px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper-raised);
+    font-size: 13px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; color: var(--ink-soft); }
+  .swatch { width: 13px; height: 13px; border-radius: 3px; border: 1.4px solid; flex: none; }
+  .swatch.go { background: var(--go-soft); border-color: var(--go); }
+  .swatch.hold { background: var(--hold-soft); border-color: var(--hold); }
+  .swatch.stop { background: var(--stop-soft); border-color: var(--stop); }
+  .swatch.mute { background: var(--mute-soft); border-color: var(--mute); }
+  .legend-hint {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--stamp);
+  }
+
+  .detail-panel {
+    margin-top: 16px;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--stamp);
+    border-radius: 10px;
+    background: var(--paper-raised);
+    min-height: 84px;
+  }
+  .detail-panel .d-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stamp);
+    margin-bottom: 6px;
+  }
+  .detail-panel h2 {
+    font-size: 17px;
+    margin: 0 0 6px;
+  }
+  .detail-panel p {
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 68ch;
+  }
+  .detail-panel code {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    background: var(--stamp-soft);
+    color: var(--stamp);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  footer {
+    padding-top: 8px;
+    padding-bottom: 40px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  footer a { color: var(--ink-soft); }
+</style>
+
+<header>
+  <div class="eyebrow">Work order · system schematic</div>
+  <h1>Dispatch Blueprint</h1>
+  <p class="dek">How one inbound request moves through the Ruzik AI Dispatch Coordinator — from a channel it arrives on to the moment it's closed out — and exactly where a human has to sign off.</p>
+  <div class="ticket-meta">
+    <span><strong>Ref.</strong> coordinator/ · PR #1</span>
+    <span><strong>Branch</strong> claude/ai-dispatch-coordinator-pilot-n5vg2r</span>
+    <span><strong>Scope</strong> backend only</span>
+  </div>
+</header>
+
+<main>
+  <figure>
+    <div class="scroll-wrap">
+      <svg viewBox="0 0 1620 820" role="img" aria-label="Diagram of the coordinator's request pipeline: three inbound channels merge into intake, which runs a safety scan, dedup, qualification, technician matching, message drafting, an approval gate, closeout and daily reporting; a guardrails layer runs beneath every stage; hazards and failed qualification route straight to an escalation lane; the approval gate and escalation lane both notify the owner.">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--ink-soft)"></path>
+          </marker>
+          <marker id="arrow-stop" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--stop)"></path>
+          </marker>
+          <marker id="arrow-accent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--stamp)"></path>
+          </marker>
+        </defs>
+
+        <!-- ===== Row 1: inbound channels ===== -->
+        <g class="node channel" tabindex="0" role="button"
+           data-title="Website inquiry" data-file="src/server.ts → POST /webhooks/website"
+           data-desc="A Netlify outgoing webhook forwards the existing contact.html submission here unchanged. Fields map deterministically — no model call needed for this channel.">
+          <rect class="node-box" x="60" y="40" width="150" height="56" rx="9"></rect>
+          <text class="node-label" x="135" y="64" text-anchor="middle">Website inquiry</text>
+          <text class="node-sub" x="135" y="80" text-anchor="middle" fill="var(--ink-soft)">contact.html</text>
+        </g>
+
+        <g class="node channel" tabindex="0" role="button"
+           data-title="SMS conversation" data-file="src/server.ts → POST /webhooks/sms"
+           data-desc="Free-text inbound. Claude extracts structured fields (parseFreeText.ts) — but the safety scan below always runs on the raw text first, independent of extraction.">
+          <rect class="node-box" x="250" y="40" width="150" height="56" rx="9"></rect>
+          <text class="node-label" x="325" y="64" text-anchor="middle">SMS</text>
+          <text class="node-sub" x="325" y="80" text-anchor="middle" fill="var(--ink-soft)">free text</text>
+        </g>
+
+        <g class="node channel" tabindex="0" role="button"
+           data-title="Missed-call text-back" data-file="src/server.ts → POST /webhooks/sms (channel: missed_call)"
+           data-desc="Same free-text pipeline as SMS, triggered by a declined/voicemail call instead of an inbound text.">
+          <rect class="node-box" x="440" y="40" width="150" height="56" rx="9"></rect>
+          <text class="node-label" x="515" y="64" text-anchor="middle">Missed-call text-back</text>
+          <text class="node-sub" x="515" y="80" text-anchor="middle" fill="var(--ink-soft)">free text</text>
+        </g>
+
+        <!-- merge connectors -->
+        <path class="conn-line flow-anim" d="M135,96 L135,150 L125,150 L125,190" marker-end="url(#arrow)"></path>
+        <path class="conn-line flow-anim" d="M325,96 L325,150 L125,150" marker-end="url(#arrow)"></path>
+        <path class="conn-line flow-anim" d="M515,96 L515,150 L125,150" marker-end="url(#arrow)"></path>
+
+        <!-- ===== Row 2: main pipeline ===== -->
+        <!-- Intake -->
+        <g class="node go" tabindex="0" role="button"
+           data-title="Intake" data-file="src/intake/createJob.ts, dedupe.ts"
+           data-desc="Creates the customer + job record and checks for a likely duplicate open job before anything else happens. Allowed autonomously — job description §1.">
+          <rect class="node-box" x="60" y="190" width="130" height="64" rx="9"></rect>
+          <text class="node-label" x="125" y="216" text-anchor="middle">Intake</text>
+          <text class="node-sub" x="125" y="234" text-anchor="middle" fill="var(--ink-soft)">+ dedup</text>
+        </g>
+
+        <path class="conn-line flow-anim" d="M190,222 L226,222" marker-end="url(#arrow)"></path>
+
+        <!-- Safety scan -->
+        <g class="node mute" tabindex="0" role="button"
+           data-title="Safety scan" data-file="src/guardrails/index.ts → scanForSafetyHazard()"
+           data-desc="Runs on the raw inbound text before anything else — gas, fire/smoke, electrical, flooding, injury keywords. A hit skips straight to the fixed safety redirect and an immediate escalation; it never reaches a drafted, model-composed reply.">
+          <rect class="node-box" x="226" y="190" width="130" height="64" rx="9"></rect>
+          <text class="node-label" x="291" y="216" text-anchor="middle">Safety scan</text>
+          <text class="node-sub" x="291" y="234" text-anchor="middle" fill="var(--ink-soft)">checked first</text>
+        </g>
+
+        <path class="conn-line flow-anim" d="M356,222 L392,222" marker-end="url(#arrow)"></path>
+
+        <!-- Dedup already folded into intake visually but keep qualify chain -->
+        <!-- Qualify -->
+        <g class="node mute" tabindex="0" role="button"
+           data-title="Qualify" data-file="src/qualify/index.ts"
+           data-desc="Checks ZIP against config/service-area.json and appliance against config/price-list.json. Never auto-rejects an unrecognized ZIP — routes to human review instead, matching the site's own 'not sure, call us' copy.">
+          <rect class="node-box" x="392" y="190" width="130" height="64" rx="9"></rect>
+          <text class="node-label" x="457" y="216" text-anchor="middle">Qualify</text>
+          <text class="node-sub" x="457" y="234" text-anchor="middle" fill="var(--ink-soft)">area · service</text>
+        </g>
+
+        <path class="conn-line flow-anim" d="M522,222 L558,222" marker-end="url(#arrow)"></path>
+
+        <!-- Technician match -->
+        <g class="node go" tabindex="0" role="button"
+           data-title="Technician match" data-file="src/scheduling/index.ts → recommendTechnician()"
+           data-desc="Matches on appliance skill, zone and current workload. A recommendation only — confirming the assignment still needs the technician's acceptance.">
+          <rect class="node-box" x="558" y="190" width="130" height="64" rx="9"></rect>
+          <text class="node-label" x="623" y="216" text-anchor="middle">Tech match</text>
+          <text class="node-sub" x="623" y="234" text-anchor="middle" fill="var(--ink-soft)">recommend only</text>
+        </g>
+
+        <path class="conn-line flow-anim" d="M688,222 L724,222" marker-end="url(#arrow)"></path>
+
+        <!-- Draft message -->
+        <g class="node go" tabindex="0" role="button"
+           data-title="Draft message" data-file="src/messaging/index.ts → draftTemplateMessage()"
+           data-desc="Fills one of the 10 approved templates in config/message-templates.json. Never freeform — and if the customer directly asks 'are you a bot', the fixed disclosure text is used instead of a template.">
+          <rect class="node-box" x="724" y="190" width="130" height="64" rx="9"></rect>
+          <text class="node-label" x="789" y="216" text-anchor="middle">Draft message</text>
+          <text class="node-sub" x="789" y="234" text-anchor="middle" fill="var(--ink-soft)">template only</text>
+        </g>
+
+        <path class="conn-line flow-anim" d="M854,222 L890,222" marker-end="url(#arrow)"></path>
+
+        <!-- Approval gate -->
+        <g class="node hold" tabindex="0" role="button"
+           data-title="Approval gate — copilot mode" data-file="src/messaging/index.ts → approveAndSend()"
+           data-desc="Every draft sits here as pending_approval until the owner takes an explicit action. Nothing sends on its own. This is the pilot's central control: the AI prepares, a human decides.">
+          <rect class="node-box" x="890" y="190" width="130" height="64" rx="9"></rect>
+          <text class="node-label" x="955" y="212" text-anchor="middle">Approval</text>
+          <text class="node-label" x="955" y="228" text-anchor="middle">gate</text>
+          <text class="node-sub" x="955" y="244" text-anchor="middle" fill="var(--hold)">holds for owner</text>
+        </g>
+
+        <path class="conn-line flow-anim" d="M1020,222 L1056,222" marker-end="url(#arrow)"></path>
+
+        <!-- Closeout -->
+        <g class="node go" tabindex="0" role="button"
+           data-title="Closeout checklist" data-file="src/closeout/index.ts → validateCloseout(), closeJob()"
+           data-desc="Refuses to close a job until diagnosis, work performed, parts, invoice, payment status, photos, warranty terms and satisfaction outcome are all on the record.">
+          <rect class="node-box" x="1056" y="190" width="130" height="64" rx="9"></rect>
+          <text class="node-label" x="1121" y="216" text-anchor="middle">Closeout</text>
+          <text class="node-sub" x="1121" y="234" text-anchor="middle" fill="var(--ink-soft)">checklist gate</text>
+        </g>
+
+        <path class="conn-line flow-anim" d="M1186,222 L1222,222" marker-end="url(#arrow)"></path>
+
+        <!-- Daily report -->
+        <g class="node go" tabindex="0" role="button"
+           data-title="Daily report" data-file="src/reporting/index.ts → generateDailyReport()"
+           data-desc="New inquiries, qualified leads, jobs booked/completed, stalled leads, revenue, outstanding balance, technician issues, complaints, items awaiting owner approval.">
+          <rect class="node-box" x="1222" y="190" width="130" height="64" rx="9"></rect>
+          <text class="node-label" x="1287" y="216" text-anchor="middle">Daily</text>
+          <text class="node-label" x="1287" y="232" text-anchor="middle">report</text>
+        </g>
+
+        <!-- ===== Guardrails band ===== -->
+        <rect class="band-rect" x="40" y="300" width="1540" height="60" rx="10"></rect>
+        <text class="band-label" x="810" y="335" text-anchor="middle">GUARDRAILS — allow-list · forbidden actions · escalation triggers · pause switch  ·  src/guardrails/index.ts</text>
+
+        <!-- taps from each go/mute node into the band (skip the two that already carry a hazard/fail branch line) -->
+        <line class="conn-accent" x1="125" y1="254" x2="125" y2="300" marker-end="url(#arrow-accent)"></line>
+        <line class="conn-accent" x1="623" y1="254" x2="623" y2="300" marker-end="url(#arrow-accent)"></line>
+        <line class="conn-accent" x1="789" y1="254" x2="789" y2="300" marker-end="url(#arrow-accent)"></line>
+        <line class="conn-accent" x1="955" y1="254" x2="955" y2="300" marker-end="url(#arrow-accent)"></line>
+        <line class="conn-accent" x1="1121" y1="254" x2="1121" y2="300" marker-end="url(#arrow-accent)"></line>
+        <line class="conn-accent" x1="1287" y1="254" x2="1287" y2="300" marker-end="url(#arrow-accent)"></line>
+
+        <!-- hazard branch (crosses the band — bypasses the normal per-stage check, routes straight to a human) -->
+        <path class="conn-stop" d="M291,254 L291,460" marker-end="url(#arrow-stop)"></path>
+        <text class="conn-label stop arrow-label" x="299" y="380" transform="rotate(90 299 380)">hazard → fixed redirect, sent immediately</text>
+
+        <!-- qualify-fail branch -->
+        <path class="conn-stop" d="M457,254 L457,460" marker-end="url(#arrow-stop)"></path>
+        <text class="conn-label stop arrow-label" x="465" y="380" transform="rotate(90 465 380)">out of area / unsupported / no price → review</text>
+
+        <!-- ===== Escalation lane ===== -->
+        <rect class="lane-rect" x="40" y="460" width="1540" height="56" rx="10"></rect>
+        <text class="lane-label band-label" x="810" y="493" text-anchor="middle">ESCALATED → OWNER, IMMEDIATELY  ·  escalate() in src/guardrails/index.ts</text>
+
+        <!-- escalation -> owner annex -->
+        <path class="conn-stop" d="M1500,516 L1500,560" marker-end="url(#arrow-stop)"></path>
+        <text class="conn-label stop arrow-label" x="1508" y="545">escalation</text>
+
+        <!-- approval gate -> owner annex (pending approval). Routed right and around the
+             escalation lane's edge (x=1600, clear of the lane's x=40-1580 span) rather than
+             straight down through it — this is a different trigger than an escalation and
+             shouldn't read as passing through that lane. Offset from the approval-gate's own
+             guardrails tap at x=955 so the two lines don't sit on top of each other. -->
+        <path class="conn-line" d="M1000,254 L1000,400 L1600,400 L1600,600 L1560,600" marker-end="url(#arrow)"></path>
+        <text class="conn-label arrow-label" x="1300" y="394">pending approval</text>
+
+        <!-- escalation -> data cluster (audit log). Routed through the 20px gap column
+             between the "jobs" and "technicians" cards so it doesn't cut through either,
+             then a short jog right into audit_log's left edge. -->
+        <path class="conn-line" d="M390,516 L390,665 L400,665" marker-end="url(#arrow)"></path>
+        <text class="conn-label arrow-label" x="398" y="600">every action</text>
+
+        <!-- ===== Data cluster ===== -->
+        <text class="group-title data-title" x="60" y="595">Data — SQLite, one file  ·  db/schema.sql</text>
+
+        <g class="node mute data-card" tabindex="0" role="button"
+           data-title="customers" data-file="db/schema.sql → customers"
+           data-desc="One row per real-world customer, deduped by phone/email before a second row is ever created.">
+          <rect x="60" y="605" width="150" height="46" rx="7"></rect>
+          <text x="135" y="633" text-anchor="middle" class="node-label">customers</text>
+        </g>
+        <g class="node mute data-card" tabindex="0" role="button"
+           data-title="jobs" data-file="db/schema.sql → jobs"
+           data-desc="One row per service request — status, qualification result, technician, closeout fields, all in one place.">
+          <rect x="230" y="605" width="150" height="46" rx="7"></rect>
+          <text x="305" y="633" text-anchor="middle" class="node-label">jobs</text>
+        </g>
+        <g class="node mute data-card" tabindex="0" role="button"
+           data-title="technicians" data-file="db/schema.sql → technicians"
+           data-desc="Skills, zones and active flag — what recommendTechnician() matches against.">
+          <rect x="400" y="605" width="150" height="46" rx="7"></rect>
+          <text x="475" y="633" text-anchor="middle" class="node-label">technicians</text>
+        </g>
+        <g class="node mute data-card" tabindex="0" role="button"
+           data-title="messages" data-file="db/schema.sql → messages"
+           data-desc="Every inbound and outbound message, with a status: pending_approval, sent, rejected or blocked.">
+          <rect x="60" y="665" width="150" height="46" rx="7"></rect>
+          <text x="135" y="693" text-anchor="middle" class="node-label">messages</text>
+        </g>
+        <g class="node mute data-card" tabindex="0" role="button"
+           data-title="escalations" data-file="db/schema.sql → escalations"
+           data-desc="One row per escalate() call — the trigger key, detail, and whether the owner has resolved it.">
+          <rect x="230" y="665" width="150" height="46" rx="7"></rect>
+          <text x="305" y="693" text-anchor="middle" class="node-label">escalations</text>
+        </g>
+        <g class="node mute data-card" tabindex="0" role="button"
+           data-title="audit_log" data-file="db/schema.sql → audit_log"
+           data-desc="Time, actor, action, record, outcome — written by logAction() from every state-changing function in the codebase. Exportable in full via GET /admin/export.">
+          <rect x="400" y="665" width="150" height="46" rx="7"></rect>
+          <text x="475" y="693" text-anchor="middle" class="node-label">audit_log</text>
+        </g>
+
+        <!-- ===== Owner side annex ===== -->
+        <rect class="annex-rect" x="1220" y="560" width="340" height="230" rx="12"></rect>
+        <text class="group-title annex-title" x="1240" y="588">Owner side</text>
+
+        <g class="node mute" tabindex="0" role="button"
+           data-title="Owner alerts" data-file="src/notify/index.ts → fireAlert(), sendAlert()"
+           data-desc="Fires on every escalation and every message that reaches the approval gate — email via SMTP, SMS via Twilio, dispatched independently so one failing never blocks the other. No credentials configured yet, so sends currently log a skipped reason instead of failing.">
+          <rect x="1240" y="602" width="300" height="44" rx="7" fill="none" stroke="none" pointer-events="all"></rect>
+          <text class="annex-row" x="1240" y="622"><tspan class="k">email + SMS </tspan>owner alerts</text>
+          <text class="node-sub" x="1240" y="638" fill="var(--ink-soft)">src/notify</text>
+        </g>
+
+        <g class="node mute" tabindex="0" role="button"
+           data-title="Approval queue" data-file="src/server.ts → GET /admin/approvals"
+           data-desc="Every message still pending_approval and every open escalation, in one call.">
+          <rect x="1240" y="654" width="300" height="44" rx="7" fill="none" stroke="none" pointer-events="all"></rect>
+          <text class="annex-row" x="1240" y="674"><tspan class="k">/admin/approvals </tspan>queue</text>
+          <text class="node-sub" x="1240" y="690" fill="var(--ink-soft)">approve · reject</text>
+        </g>
+
+        <g class="node mute" tabindex="0" role="button"
+           data-title="Pause, export, daily report" data-file="src/server.ts → /admin/pause, /admin/export, /admin/report"
+           data-desc="The manual pause switch stops every AI-initiated send instantly (safety redirects and record-keeping still work). Export dumps every table as JSON.">
+          <rect x="1240" y="706" width="300" height="46" rx="7" fill="none" stroke="none" pointer-events="all"></rect>
+          <text class="annex-row" x="1240" y="726"><tspan class="k">pause </tspan>· export · daily report</text>
+          <text class="node-sub" x="1240" y="742" fill="var(--ink-soft)">/admin/*</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Green = the AI may act on its own (job description §Authority). Amber = drafted, held for an explicit owner decision. Red = always routes to a human, without delay. Slate = data and owner-facing infrastructure. Click any box for the file behind it.</figcaption>
+  </figure>
+
+  <div class="legend">
+    <span class="legend-item"><span class="swatch go"></span>Autonomous</span>
+    <span class="legend-item"><span class="swatch hold"></span>Approval-gated</span>
+    <span class="legend-item"><span class="swatch stop"></span>Always escalates</span>
+    <span class="legend-item"><span class="swatch mute"></span>Data / owner-facing</span>
+    <span class="legend-hint">click a box ↑</span>
+  </div>
+
+  <div class="detail-panel" id="detail" aria-live="polite">
+    <div class="d-eyebrow">Detail</div>
+    <h2 id="detail-title">Click any box in the schematic</h2>
+    <p id="detail-desc">Every stage links back to the file that actually implements it — this panel updates with the real path, not a paraphrase.</p>
+    <code id="detail-file">coordinator/</code>
+  </div>
+</main>
+
+<footer>
+  Scope: the coordinator backend only (not the marketing site). Source: <span style="font-family: var(--font-mono);">coordinator/</span> in this repo, PR #1.
+</footer>
+
+<script>
+  (function () {
+    var titleEl = document.getElementById('detail-title');
+    var descEl = document.getElementById('detail-desc');
+    var fileEl = document.getElementById('detail-file');
+
+    function activate(node) {
+      var title = node.getAttribute('data-title');
+      var file = node.getAttribute('data-file');
+      var desc = node.getAttribute('data-desc');
+      if (!title) return;
+      titleEl.textContent = title;
+      descEl.textContent = desc || '';
+      fileEl.textContent = file || '';
+    }
+
+    var nodes = document.querySelectorAll('.node[data-title]');
+    nodes.forEach(function (node) {
+      node.addEventListener('click', function () { activate(node); });
+      node.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          activate(node);
+        }
+      });
+    });
+  })();
+</script>

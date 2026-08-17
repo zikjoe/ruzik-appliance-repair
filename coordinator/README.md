@@ -42,6 +42,7 @@ Server listens on `:3000` by default (`PORT` env var to change).
 | `config/*.json` | Every tunable the AI operates within — price list, service area, templates, escalation keywords, spending caps. Seeded from the real site content in the repo root, not placeholders. |
 | `test/acceptance/` | The 25-50 scripted scenarios required by the Pilot Acceptance Test — `npm test` |
 | `docs/` | Pilot plan, authority matrix, metrics definitions, ownership checklist, runbook, go-live steps |
+| `docs/architecture.html` | Interactive schematic of the whole request pipeline — open it directly in a browser, or ask Claude to republish it as an Artifact. Hand-authored, not generated — update it when the pipeline shape changes, not on every commit. |
 
 ## Explicitly not built (Phase-One Channels)
 
