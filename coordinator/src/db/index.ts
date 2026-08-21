@@ -18,7 +18,11 @@ const schema = readFileSync(SCHEMA_PATH, 'utf-8');
 db.exec(schema);
 
 /** Seed a single default technician (the owner) if the table is empty, so the
- * pilot has something to schedule against on day one. */
+ * pilot has something to schedule against on day one. This is one-time
+ * bootstrap fixture data owned by the DB module's own lifecycle, not
+ * scattered domain logic — unlike every other module in this codebase, it
+ * intentionally doesn't go through techniciansRepo.ts (which would also
+ * create a circular import: repo -> db/index -> repo). */
 export function seedIfEmpty(): void {
   const count = (db.prepare('SELECT COUNT(*) as n FROM technicians').get() as { n: number }).n;
   if (count === 0) {

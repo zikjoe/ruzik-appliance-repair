@@ -10,7 +10,8 @@ import {
   recordInboundMessage,
 } from '../messaging/index.js';
 import { SAFETY_REDIRECT_MESSAGE, scanForSafetyHazard, classifyEscalationTriggers, escalate } from '../guardrails/index.js';
-import { db } from '../db/index.js';
+import * as messagesRepo from '../db/messagesRepo.js';
+import * as customersRepo from '../db/customersRepo.js';
 import { logAction } from '../audit/index.js';
 import { missingRequiredFields } from './types.js';
 import type { Channel, IntakeFields } from './types.js';
@@ -33,13 +34,16 @@ export interface InboundResult {
  * risk of a delay outweighs the risk of the fixed message itself. Everything
  * else in the system stays gated behind approval. */
 function sendSafetyRedirectImmediately(jobId: number, customerId: number | undefined, channel: Channel): number {
-  const result = db
-    .prepare(
-      `INSERT INTO messages (job_id, customer_id, direction, channel, template_key, body, status, approved_at, sent_at)
-       VALUES (?, ?, 'outbound', ?, 'safety_redirect', ?, 'sent', datetime('now'), datetime('now'))`
-    )
-    .run(jobId, customerId ?? null, channel, SAFETY_REDIRECT_MESSAGE);
-  const messageId = result.lastInsertRowid as number;
+  const messageId = messagesRepo.insert({
+    jobId,
+    customerId: customerId ?? null,
+    direction: 'outbound',
+    channel,
+    templateKey: 'safety_redirect',
+    body: SAFETY_REDIRECT_MESSAGE,
+    status: 'sent',
+    sentImmediately: true,
+  });
   logAction({ action: 'send_safety_redirect', recordType: 'message', recordId: messageId, outcome: 'allowed' });
   return messageId;
 }
@@ -69,9 +73,7 @@ function afterIntake(
     recommendTechnician(jobId);
   }
 
-  const customer = db.prepare(`SELECT full_name FROM customers WHERE id = ?`).get(customerId) as
-    | { full_name: string }
-    | undefined;
+  const customer = customersRepo.getById(customerId);
 
   let outboundMessageId: number | undefined;
   let outboundBody: string | undefined;

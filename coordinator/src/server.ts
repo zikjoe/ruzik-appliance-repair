@@ -4,7 +4,10 @@ import { handleWebsiteInquiry, handleFreeTextInquiry, handleFollowUpMessage } fr
 import { approveAndSend, rejectMessage } from './messaging/index.js';
 import { setPaused, isPaused, exportAll } from './audit/index.js';
 import { generateDailyReport, formatReportAsText } from './reporting/index.js';
-import { db } from './db/index.js';
+import * as jobsRepo from './db/jobsRepo.js';
+import * as customersRepo from './db/customersRepo.js';
+import * as messagesRepo from './db/messagesRepo.js';
+import * as escalationsRepo from './db/escalationsRepo.js';
 
 const app = express();
 app.use(express.json());
@@ -77,9 +80,7 @@ app.post('/webhooks/inbound-message', (req, res) => {
 
 // ── Admin: copilot-mode approval queue ──────────────────────────────────
 app.get('/admin/approvals', requireAdmin, (_req, res) => {
-  const messages = db.prepare(`SELECT * FROM messages WHERE status = 'pending_approval' ORDER BY created_at`).all();
-  const escalations = db.prepare(`SELECT * FROM escalations WHERE status = 'open' ORDER BY created_at`).all();
-  res.json({ messages, escalations });
+  res.json({ messages: messagesRepo.listPendingApproval(), escalations: escalationsRepo.listOpen() });
 });
 
 app.post('/admin/messages/:id/approve', requireAdmin, (req, res) => {
@@ -94,9 +95,7 @@ app.post('/admin/messages/:id/reject', requireAdmin, (req, res) => {
 });
 
 app.post('/admin/escalations/:id/resolve', requireAdmin, (req, res) => {
-  db.prepare(`UPDATE escalations SET status = 'resolved', resolved_at = datetime('now') WHERE id = ?`).run(
-    Number(req.params.id)
-  );
+  escalationsRepo.resolve(Number(req.params.id));
   res.json({ resolved: true });
 });
 
@@ -128,13 +127,11 @@ app.get('/admin/report', requireAdmin, (req, res) => {
 
 app.get('/admin/jobs/:id', requireAdmin, (req, res) => {
   const jobId = Number(req.params.id);
-  const job = db.prepare(`SELECT * FROM jobs WHERE id = ?`).get(jobId);
+  const job = jobsRepo.getById(jobId);
   if (!job) return res.status(404).json({ error: 'not_found' });
-  const customer = db
-    .prepare(`SELECT * FROM customers WHERE id = (SELECT customer_id FROM jobs WHERE id = ?)`)
-    .get(jobId);
-  const messages = db.prepare(`SELECT * FROM messages WHERE job_id = ? ORDER BY created_at`).all(jobId);
-  const escalations = db.prepare(`SELECT * FROM escalations WHERE job_id = ? ORDER BY created_at`).all(jobId);
+  const customer = customersRepo.getById(job.customer_id);
+  const messages = messagesRepo.listForJob(jobId);
+  const escalations = escalationsRepo.listForJob(jobId);
   res.json({ job, customer, messages, escalations });
 });
 

@@ -28,6 +28,16 @@ export function logAction(entry: {
   );
 }
 
+/** Count of a given action already logged today — e.g. src/lib/claude.ts uses
+ * this to enforce the daily Claude API call cap without knowing audit_log's
+ * column names itself. */
+export function countActionsToday(action: string): number {
+  const row = db
+    .prepare(`SELECT COUNT(*) as n FROM audit_log WHERE action = ? AND date(ts) = date('now')`)
+    .get(action) as { n: number };
+  return row.n;
+}
+
 /** Manual pause switch. When paused, the coordinator may still read/qualify/draft
  * but must never send a message or confirm a schedule without a human first
  * flipping this back — see docs/runbook.md. */

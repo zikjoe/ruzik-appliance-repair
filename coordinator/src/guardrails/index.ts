@@ -1,5 +1,6 @@
 import { escalationTriggers } from '../lib/config.js';
-import { db } from '../db/index.js';
+import * as jobsRepo from '../db/jobsRepo.js';
+import * as escalationsRepo from '../db/escalationsRepo.js';
 import { logAction, isPaused, type Actor } from '../audit/index.js';
 import { fireAlert } from '../notify/index.js';
 
@@ -113,16 +114,9 @@ export function escalate(opts: {
   detail?: string;
   actor?: Actor;
 }): number {
-  const result = db
-    .prepare(`INSERT INTO escalations (job_id, trigger, detail) VALUES (?, ?, ?)`)
-    .run(opts.jobId ?? null, opts.trigger, opts.detail ?? null);
+  const escalationId = escalationsRepo.create({ jobId: opts.jobId, trigger: opts.trigger, detail: opts.detail });
   if (opts.jobId) {
-    db.prepare(
-      // COALESCE, not overwrite: a caller (e.g. qualifyJob) may already have
-      // set a more specific reason before raising this escalation — don't
-      // clobber it with just the trigger key.
-      `UPDATE jobs SET needs_human_review = 1, human_review_reason = COALESCE(human_review_reason, ?), status = 'needs_human', updated_at = datetime('now') WHERE id = ?`
-    ).run(opts.trigger, opts.jobId);
+    jobsRepo.markNeedsHumanReview(opts.jobId, opts.trigger);
   }
   logAction({
     actor: opts.actor ?? 'ai_coordinator',
@@ -138,7 +132,7 @@ export function escalate(opts: {
     body: `${opts.trigger}${opts.detail ? `: ${opts.detail}` : ''}`,
     jobId: opts.jobId,
   });
-  return result.lastInsertRowid as number;
+  return escalationId;
 }
 
 const ANGER_PATTERNS = [

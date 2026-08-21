@@ -1,6 +1,16 @@
 import { db } from '../db/index.js';
 import { logAction } from '../audit/index.js';
 
+/** Unlike every other module in this codebase, reporting queries `db`
+ * directly rather than going through a repository. That's a deliberate
+ * exception, not an oversight: these are read-only, cross-table aggregate
+ * queries (counts/sums by date, joins across jobs/messages/escalations) —
+ * a read model, not entity CRUD. Forcing each one through a generic
+ * per-table repo method would mean bloating those repos with one-off
+ * aggregate methods that only reporting ever calls. The risk repositories
+ * guard against — two code paths writing the same row differently — simply
+ * doesn't apply to a module that never writes. */
+
 export interface DailyReport {
   date: string;
   newInquiries: number;

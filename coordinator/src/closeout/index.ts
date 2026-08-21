@@ -1,21 +1,5 @@
-import { db } from '../db/index.js';
+import * as jobsRepo from '../db/jobsRepo.js';
 import { logAction } from '../audit/index.js';
-
-interface JobCloseoutRow {
-  id: number;
-  diagnosis: string | null;
-  work_performed: string | null;
-  parts_used: string | null;
-  invoice_amount_cents: number | null;
-  payment_status: string | null;
-  before_photo_ref: string | null;
-  after_photo_ref: string | null;
-  warranty_terms: string | null;
-  warranty_expires: string | null;
-  satisfaction_outcome: string | null;
-  review_request_status: string | null;
-  status: string;
-}
 
 export interface CloseoutCheck {
   complete: boolean;
@@ -28,7 +12,7 @@ export interface CloseoutCheck {
  * by whoever closes the job, not inferred silently by the AI). */
 export function validateCloseout(jobId: number, opts: { photosRequired?: boolean } = {}): CloseoutCheck {
   const photosRequired = opts.photosRequired ?? true;
-  const job = db.prepare(`SELECT * FROM jobs WHERE id = ?`).get(jobId) as JobCloseoutRow | undefined;
+  const job = jobsRepo.getById(jobId);
   if (!job) throw new Error(`Job ${jobId} not found`);
 
   const missing: string[] = [];
@@ -47,6 +31,19 @@ export function validateCloseout(jobId: number, opts: { photosRequired?: boolean
   return { complete: missing.length === 0, missing };
 }
 
+/** Records the closeout checklist fields against a job. Nothing calls this
+ * yet in production (there's no UI for a technician/owner to fill these in
+ * — see GitHub issue #6, the admin dashboard), but it's the one place that
+ * should ever write these columns once that exists, rather than another
+ * raw UPDATE appearing wherever needs it next. */
+export function recordCloseout(
+  jobId: number,
+  fields: Parameters<typeof jobsRepo.recordCloseoutFields>[1]
+): void {
+  jobsRepo.recordCloseoutFields(jobId, fields);
+  logAction({ action: 'record_closeout_fields', recordType: 'job', recordId: jobId, outcome: 'allowed' });
+}
+
 /** Refuses to close an incomplete job — the checklist is a hard gate, not a
  * warning. Missing fields get logged and left for the owner/technician to
  * fill in rather than closed with gaps. */
@@ -62,7 +59,7 @@ export function closeJob(jobId: number, opts: { photosRequired?: boolean } = {})
     });
     return check;
   }
-  db.prepare(`UPDATE jobs SET status = 'closed', updated_at = datetime('now') WHERE id = ?`).run(jobId);
+  jobsRepo.updateStatus(jobId, 'closed');
   logAction({ action: 'close_job', recordType: 'job', recordId: jobId, outcome: 'allowed' });
   return check;
 }

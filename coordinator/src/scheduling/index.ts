@@ -1,4 +1,6 @@
-import { db } from '../db/index.js';
+import * as jobsRepo from '../db/jobsRepo.js';
+import * as techniciansRepo from '../db/techniciansRepo.js';
+import * as customersRepo from '../db/customersRepo.js';
 import { appointmentWindows } from '../lib/config.js';
 import { logAction } from '../audit/index.js';
 import { escalate } from '../guardrails/index.js';
@@ -40,15 +42,6 @@ export function offerApprovedWindows(fromDate: Date = new Date()): OfferedWindow
   return offers.slice(0, appointmentWindows.offerDaysAhead * appointmentWindows.daily.length);
 }
 
-interface TechnicianRow {
-  id: number;
-  name: string;
-  phone: string | null;
-  skills: string;
-  zones: string;
-  active: number;
-}
-
 /** job description § 3: "Match jobs using technician availability, service
  * area, appliance type, brand capability, and workload." Picks the active
  * technician whose skills cover the appliance and whose zones cover the ZIP
@@ -57,13 +50,10 @@ interface TechnicianRow {
  * not confirm anything; confirmation requires technician acceptance, see
  * recordTechnicianResponse below. */
 export function recommendTechnician(jobId: number): { technicianId: number; name: string } | undefined {
-  const job = db.prepare(`SELECT appliance, zip FROM jobs WHERE id = ?`).get(jobId) as
-    | { appliance: string | null; zip: string | null }
-    | undefined;
+  const job = jobsRepo.getById(jobId);
   if (!job?.appliance) return undefined;
 
-  const techs = db.prepare(`SELECT * FROM technicians WHERE active = 1`).all() as TechnicianRow[];
-  const candidates = techs.filter((t) => {
+  const candidates = techniciansRepo.listActive().filter((t) => {
     const skills: string[] = JSON.parse(t.skills);
     const zones: string[] = JSON.parse(t.zones);
     const skillMatch = skills.includes(job.appliance!);
@@ -72,22 +62,10 @@ export function recommendTechnician(jobId: number): { technicianId: number; name
   });
   if (candidates.length === 0) return undefined;
 
-  const workloadOf = (techId: number) =>
-    (
-      db
-        .prepare(
-          `SELECT COUNT(*) as n FROM jobs WHERE technician_id = ? AND status NOT IN ('completed','closed','cancelled')`
-        )
-        .get(techId) as { n: number }
-    ).n;
-
-  candidates.sort((a, b) => workloadOf(a.id) - workloadOf(b.id));
+  candidates.sort((a, b) => jobsRepo.countOpenForTechnician(a.id) - jobsRepo.countOpenForTechnician(b.id));
   const chosen = candidates[0];
 
-  db.prepare(`UPDATE jobs SET technician_id = ?, updated_at = datetime('now') WHERE id = ?`).run(
-    chosen.id,
-    jobId
-  );
+  jobsRepo.assignTechnician(jobId, chosen.id);
   logAction({
     action: 'recommend_technician_assignment',
     recordType: 'job',
@@ -100,18 +78,14 @@ export function recommendTechnician(jobId: number): { technicianId: number; name
 
 /** job description § 3: "Send the technician a structured job summary." */
 export function buildTechnicianJobSummary(jobId: number): string {
-  const job = db
-    .prepare(
-      `SELECT j.*, c.full_name, c.address as customer_address, c.zip as customer_zip, c.phone as customer_phone
-       FROM jobs j JOIN customers c ON c.id = j.customer_id WHERE j.id = ?`
-    )
-    .get(jobId) as Record<string, unknown> | undefined;
+  const job = jobsRepo.getById(jobId);
   if (!job) throw new Error(`Job ${jobId} not found`);
+  const customer = customersRepo.getById(job.customer_id);
 
   return [
     `New job #${jobId} — ${job.service_type ?? 'Service'} — ${job.appliance ?? 'appliance TBD'}`,
-    `Customer: ${job.full_name} — ${job.customer_phone ?? 'no phone on file'}`,
-    `Address: ${job.address ?? job.customer_address ?? 'TBD'} (${job.zip ?? job.customer_zip ?? 'zip TBD'})`,
+    `Customer: ${customer?.full_name ?? 'unknown'} — ${customer?.phone ?? 'no phone on file'}`,
+    `Address: ${job.address ?? customer?.address ?? 'TBD'} (${job.zip ?? customer?.zip ?? 'zip TBD'})`,
     `Brand/Model: ${job.brand ?? 'unknown'} / ${job.model ?? 'unknown'}`,
     `Problem: ${job.problem_description ?? ''}`,
     `Preferred windows: ${job.preferred_windows ?? 'none given'}`,
@@ -128,14 +102,13 @@ export function recordTechnicianResponse(
   window?: { date: string; windowLabel: string }
 ): void {
   if (accepted && window) {
-    db.prepare(
-      `UPDATE jobs SET technician_accepted = 1, status = 'scheduled', scheduled_window = ?, updated_at = datetime('now') WHERE id = ?`
-    ).run(`${window.date} ${window.windowLabel}`, jobId);
+    jobsRepo.recordTechnicianResponse(jobId, {
+      accepted: true,
+      scheduledWindow: `${window.date} ${window.windowLabel}`,
+    });
     logAction({ action: 'technician_accept', recordType: 'job', recordId: jobId, outcome: 'allowed' });
   } else {
-    db.prepare(
-      `UPDATE jobs SET technician_accepted = 0, updated_at = datetime('now') WHERE id = ?`
-    ).run(jobId);
+    jobsRepo.recordTechnicianResponse(jobId, { accepted: false });
     escalate({ jobId, trigger: 'unaccepted_assignment', detail: 'technician_declined_or_did_not_respond' });
   }
 }
@@ -152,6 +125,6 @@ export function requestCancellation(jobId: number, reason?: string): void {
  * cancellation after reviewing it — the only path that actually flips job
  * status, keeping "cancel this job" outside the AI's own authority. */
 export function confirmCancellation(jobId: number, actor: 'owner' = 'owner'): void {
-  db.prepare(`UPDATE jobs SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?`).run(jobId);
+  jobsRepo.updateStatus(jobId, 'cancelled');
   logAction({ actor, action: 'confirm_cancellation', recordType: 'job', recordId: jobId, outcome: 'allowed' });
 }

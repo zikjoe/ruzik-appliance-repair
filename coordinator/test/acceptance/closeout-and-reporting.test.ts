@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { handleWebsiteInquiry } from '../../src/lib/orchestrate.js';
-import { validateCloseout, closeJob } from '../../src/closeout/index.js';
+import { validateCloseout, closeJob, recordCloseout } from '../../src/closeout/index.js';
 import { generateDailyReport, formatReportAsText } from '../../src/reporting/index.js';
 import { exportAll } from '../../src/audit/index.js';
 import { db } from '../../src/db/index.js';
@@ -20,26 +20,19 @@ describe('Job closeout checklist', () => {
 
   it('closes a job once every checklist field is filled', () => {
     const initial = handleWebsiteInquiry(makeWebsitePayload());
-    db.prepare(
-      `UPDATE jobs SET
-         diagnosis = ?, work_performed = ?, parts_used = ?, invoice_amount_cents = ?,
-         payment_status = ?, before_photo_ref = ?, after_photo_ref = ?,
-         warranty_terms = ?, warranty_expires = ?, satisfaction_outcome = ?, review_request_status = ?
-       WHERE id = ?`
-    ).run(
-      'Failed thermal fuse',
-      'Replaced thermal fuse and tested full cycle',
-      'Thermal fuse (OEM)',
-      12500,
-      'paid',
-      'photo://before/1',
-      'photo://after/1',
-      '90-day parts and labor warranty',
-      '2026-11-08',
-      'satisfied',
-      'sent',
-      initial.jobId
-    );
+    recordCloseout(initial.jobId, {
+      diagnosis: 'Failed thermal fuse',
+      workPerformed: 'Replaced thermal fuse and tested full cycle',
+      partsUsed: 'Thermal fuse (OEM)',
+      invoiceAmountCents: 12500,
+      paymentStatus: 'paid',
+      beforePhotoRef: 'photo://before/1',
+      afterPhotoRef: 'photo://after/1',
+      warrantyTerms: '90-day parts and labor warranty',
+      warrantyExpires: '2026-11-08',
+      satisfactionOutcome: 'satisfied',
+      reviewRequestStatus: 'sent',
+    });
     const check = validateCloseout(initial.jobId);
     expect(check.complete).toBe(true);
 

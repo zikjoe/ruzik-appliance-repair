@@ -1,4 +1,5 @@
-import { db } from '../db/index.js';
+import * as customersRepo from '../db/customersRepo.js';
+import * as jobsRepo from '../db/jobsRepo.js';
 import { logAction } from '../audit/index.js';
 import { scanForSafetyHazard, classifyEscalationTriggers, escalate } from '../guardrails/index.js';
 import { findExistingCustomer, findLikelyDuplicateJob } from './dedupe.js';
@@ -32,65 +33,47 @@ export function createJob(opts: {
   let customerId: number;
   if (existing) {
     customerId = existing.id;
-    db.prepare(
-      `UPDATE customers SET
-         full_name = COALESCE(?, full_name),
-         address = COALESCE(?, address),
-         zip = COALESCE(?, zip),
-         email = COALESCE(?, email),
-         updated_at = datetime('now')
-       WHERE id = ?`
-    ).run(fields.fullName ?? null, fields.address ?? null, fields.zip ?? null, fields.email ?? null, customerId);
+    customersRepo.update(customerId, {
+      fullName: fields.fullName,
+      address: fields.address,
+      zip: fields.zip,
+      email: fields.email,
+    });
     logAction({ action: 'update_customer', recordType: 'customer', recordId: customerId, outcome: 'allowed' });
   } else {
-    const result = db
-      .prepare(
-        `INSERT INTO customers (full_name, phone, email, address, zip, property_type, access_notes, referral_source)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-      )
-      .run(
-        fields.fullName ?? 'Unknown',
-        fields.phone ?? null,
-        fields.email ?? null,
-        fields.address ?? null,
-        fields.zip ?? null,
-        fields.propertyType ?? null,
-        fields.accessInstructions ?? null,
-        fields.referralSource ?? null
-      );
-    customerId = result.lastInsertRowid as number;
+    customerId = customersRepo.create({
+      fullName: fields.fullName ?? 'Unknown',
+      phone: fields.phone,
+      email: fields.email,
+      address: fields.address,
+      zip: fields.zip,
+      propertyType: fields.propertyType,
+      accessInstructions: fields.accessInstructions,
+      referralSource: fields.referralSource,
+    });
     logAction({ action: 'create_customer', recordType: 'customer', recordId: customerId, outcome: 'allowed' });
   }
 
-  const duplicate = findLikelyDuplicateJob(customerId, fields.appliance) as { id: number } | undefined;
+  const duplicate = findLikelyDuplicateJob(customerId, fields.appliance);
 
-  const jobResult = db
-    .prepare(
-      `INSERT INTO jobs (
-         customer_id, channel, status, address, zip, service_type, appliance, brand, model,
-         problem_description, has_media, preferred_windows, urgent,
-         needs_human_review, human_review_reason, duplicate_of_job_id
-       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
-    )
-    .run(
-      customerId,
-      channel,
-      safety.hazard ? 'needs_human' : 'new_lead',
-      fields.address ?? null,
-      fields.zip ?? null,
-      fields.serviceType ?? null,
-      fields.appliance ?? null,
-      fields.brand ?? null,
-      fields.model ?? null,
-      fields.problemDescription ?? rawText,
-      fields.hasMedia ? 1 : 0,
-      fields.preferredWindows ? JSON.stringify(fields.preferredWindows) : null,
-      fields.urgent ? 1 : 0,
-      safety.hazard || duplicate ? 1 : 0,
-      safety.hazard ? 'safety_hazard' : duplicate ? 'possible_duplicate' : null,
-      duplicate?.id ?? null
-    );
-  const jobId = jobResult.lastInsertRowid as number;
+  const jobId = jobsRepo.create({
+    customerId,
+    channel,
+    status: safety.hazard ? 'needs_human' : 'new_lead',
+    address: fields.address,
+    zip: fields.zip,
+    serviceType: fields.serviceType,
+    appliance: fields.appliance,
+    brand: fields.brand,
+    model: fields.model,
+    problemDescription: fields.problemDescription ?? rawText,
+    hasMedia: fields.hasMedia,
+    preferredWindows: fields.preferredWindows,
+    urgent: fields.urgent,
+    needsHumanReview: safety.hazard || Boolean(duplicate),
+    humanReviewReason: safety.hazard ? 'safety_hazard' : duplicate ? 'possible_duplicate' : undefined,
+    duplicateOfJobId: duplicate?.id,
+  });
   logAction({ action: 'create_job_record', recordType: 'job', recordId: jobId, outcome: 'allowed' });
 
   const otherEscalations: string[] = [];

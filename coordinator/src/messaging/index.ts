@@ -1,4 +1,4 @@
-import { db } from '../db/index.js';
+import * as messagesRepo from '../db/messagesRepo.js';
 import { messageTemplates, business } from '../lib/config.js';
 import { logAction } from '../audit/index.js';
 import { checkAction } from '../guardrails/index.js';
@@ -50,13 +50,16 @@ export function draftDisclosureMessage(opts: {
 }): DraftResult {
   const check = checkAction('send_approved_template', { jobId: opts.jobId });
   const body = disclosureMessage();
-  const result = db
-    .prepare(
-      `INSERT INTO messages (job_id, customer_id, direction, channel, template_key, body, status, blocked_reason)
-       VALUES (?, ?, 'outbound', ?, 'disclosure', ?, ?, ?)`
-    )
-    .run(opts.jobId, opts.customerId, opts.channel, body, check.allowed ? 'pending_approval' : 'blocked', check.allowed ? null : check.reason ?? null);
-  const messageId = result.lastInsertRowid as number;
+  const messageId = messagesRepo.insert({
+    jobId: opts.jobId,
+    customerId: opts.customerId,
+    direction: 'outbound',
+    channel: opts.channel,
+    templateKey: 'disclosure',
+    body,
+    status: check.allowed ? 'pending_approval' : 'blocked',
+    blockedReason: check.allowed ? undefined : check.reason,
+  });
   logAction({
     action: 'draft_disclosure_message',
     recordType: 'message',
@@ -88,21 +91,16 @@ export function draftTemplateMessage(opts: {
   const check = checkAction('send_approved_template', { jobId: opts.jobId });
   const body = fillTemplate(opts.templateKey, opts.vars);
 
-  const result = db
-    .prepare(
-      `INSERT INTO messages (job_id, customer_id, direction, channel, template_key, body, status, blocked_reason)
-       VALUES (?, ?, 'outbound', ?, ?, ?, ?, ?)`
-    )
-    .run(
-      opts.jobId,
-      opts.customerId,
-      opts.channel,
-      opts.templateKey,
-      body,
-      check.allowed ? 'pending_approval' : 'blocked',
-      check.allowed ? null : check.reason ?? null
-    );
-  const messageId = result.lastInsertRowid as number;
+  const messageId = messagesRepo.insert({
+    jobId: opts.jobId,
+    customerId: opts.customerId,
+    direction: 'outbound',
+    channel: opts.channel,
+    templateKey: opts.templateKey,
+    body,
+    status: check.allowed ? 'pending_approval' : 'blocked',
+    blockedReason: check.allowed ? undefined : check.reason,
+  });
 
   logAction({
     action: 'draft_template_message',
@@ -132,13 +130,14 @@ export function recordInboundMessage(opts: {
   channel: 'website' | 'sms' | 'missed_call';
   body: string;
 }): number {
-  const result = db
-    .prepare(
-      `INSERT INTO messages (job_id, customer_id, direction, channel, body, status)
-       VALUES (?, ?, 'inbound', ?, ?, 'sent')`
-    )
-    .run(opts.jobId ?? null, opts.customerId ?? null, opts.channel, opts.body);
-  const id = result.lastInsertRowid as number;
+  const id = messagesRepo.insert({
+    jobId: opts.jobId ?? null,
+    customerId: opts.customerId ?? null,
+    direction: 'inbound',
+    channel: opts.channel,
+    body: opts.body,
+    status: 'sent',
+  });
   logAction({ action: 'record_inbound_message', recordType: 'message', recordId: id, outcome: 'allowed' });
   return id;
 }
@@ -149,29 +148,22 @@ export function recordInboundMessage(opts: {
  * docs/go-live-checklist.md. Re-checks guardrails at send time in case the
  * system was paused after the draft was created. */
 export function approveAndSend(messageId: number, actor: 'owner' = 'owner'): { sent: boolean; reason?: string } {
-  const msg = db.prepare(`SELECT * FROM messages WHERE id = ?`).get(messageId) as
-    | { id: number; job_id: number | null; status: string }
-    | undefined;
+  const msg = messagesRepo.getById(messageId);
   if (!msg) throw new Error(`Message ${messageId} not found`);
 
   const check = checkAction('send_approved_template', { jobId: msg.job_id ?? undefined });
   if (!check.allowed) {
-    db.prepare(`UPDATE messages SET status = 'blocked', blocked_reason = ? WHERE id = ?`).run(
-      check.reason ?? 'blocked',
-      messageId
-    );
+    messagesRepo.updateStatus(messageId, 'blocked', { blockedReason: check.reason ?? 'blocked' });
     logAction({ actor, action: 'send_blocked', recordType: 'message', recordId: messageId, outcome: 'blocked' });
     return { sent: false, reason: check.reason };
   }
 
-  db.prepare(
-    `UPDATE messages SET status = 'sent', approved_at = datetime('now'), sent_at = datetime('now') WHERE id = ?`
-  ).run(messageId);
+  messagesRepo.markSent(messageId);
   logAction({ actor, action: 'send_message', recordType: 'message', recordId: messageId, outcome: 'allowed' });
   return { sent: true };
 }
 
 export function rejectMessage(messageId: number, reason: string, actor: 'owner' = 'owner'): void {
-  db.prepare(`UPDATE messages SET status = 'rejected', blocked_reason = ? WHERE id = ?`).run(reason, messageId);
+  messagesRepo.updateStatus(messageId, 'rejected', { blockedReason: reason });
   logAction({ actor, action: 'reject_message', recordType: 'message', recordId: messageId, outcome: 'blocked', detail: reason });
 }

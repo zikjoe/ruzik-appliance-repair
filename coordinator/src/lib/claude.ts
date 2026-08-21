@@ -1,7 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
-import { db } from '../db/index.js';
 import { spendingLimits } from './config.js';
-import { logAction } from '../audit/index.js';
+import { logAction, countActionsToday } from '../audit/index.js';
 
 let client: Anthropic | null = null;
 
@@ -18,22 +17,12 @@ function getClient(): Anthropic {
   return client;
 }
 
-function todayCallCount(): number {
-  const row = db
-    .prepare(
-      `SELECT COUNT(*) as n FROM audit_log
-       WHERE action = 'claude_api_call' AND date(ts) = date('now')`
-    )
-    .get() as { n: number };
-  return row.n;
-}
-
 /** Enforces config/spending-limits.json before every model call. Fails closed:
  * if the daily cap is hit, the call is refused and the caller must escalate
  * instead of silently degrading. See job description § Technical and
  * Ownership Requirements ("spending limits and usage alerts"). */
 export function assertUnderSpendingCap(): void {
-  const count = todayCallCount();
+  const count = countActionsToday('claude_api_call');
   if (count >= spendingLimits.dailyClaudeApiCallCap) {
     logAction({
       action: 'spending_cap_exceeded',

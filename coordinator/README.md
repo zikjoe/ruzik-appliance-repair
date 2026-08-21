@@ -28,6 +28,7 @@ Server listens on `:3000` by default (`PORT` env var to change).
 
 | Path | What |
 |---|---|
+| `src/db/*Repo.ts` | The only files that write SQL against `customers`/`jobs`/`technicians`/`messages`/`escalations`. Every other module (below) goes through these — no other file should know a column name. `src/audit` and `src/reporting` are the two documented exceptions: audit owns `audit_log`/`system_state` outright, and reporting's read-only cross-table aggregates aren't entity CRUD. |
 | `src/intake/` | Lead intake: field extraction (deterministic for the website form, Claude-assisted for free-text SMS), dedup |
 | `src/qualify/` | Service-area / service-type qualification |
 | `src/guardrails/` | The authority allow-list, forbidden-action list, escalation-trigger classifiers, safety-hazard scanner, pause-switch gate |

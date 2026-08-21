@@ -1,4 +1,4 @@
-import { db } from '../db/index.js';
+import * as jobsRepo from '../db/jobsRepo.js';
 import { serviceArea, priceList } from '../lib/config.js';
 import { logAction } from '../audit/index.js';
 import { escalate } from '../guardrails/index.js';
@@ -17,9 +17,7 @@ export interface QualificationResult {
  * repair is possible — that's enforced by qualification only gating
  * *scheduling*, never diagnosis language (see src/messaging). */
 export function qualifyJob(jobId: number): QualificationResult {
-  const job = db.prepare(`SELECT * FROM jobs WHERE id = ?`).get(jobId) as
-    | { zip: string | null; appliance: string | null }
-    | undefined;
+  const job = jobsRepo.getById(jobId);
   if (!job) throw new Error(`Job ${jobId} not found`);
 
   const reasons: string[] = [];
@@ -39,23 +37,12 @@ export function qualifyJob(jobId: number): QualificationResult {
 
   const needsHumanReview = inServiceArea !== true || !serviceSupported || !hasPublishedRange;
 
-  db.prepare(
-    `UPDATE jobs SET
-       in_service_area = ?,
-       service_supported = ?,
-       status = CASE WHEN status = 'new_lead' THEN 'qualifying' ELSE status END,
-       needs_human_review = CASE WHEN ? THEN 1 ELSE needs_human_review END,
-       human_review_reason = CASE WHEN ? THEN ? ELSE human_review_reason END,
-       updated_at = datetime('now')
-     WHERE id = ?`
-  ).run(
-    inServiceArea === true ? 1 : 0,
-    serviceSupported ? 1 : 0,
-    needsHumanReview ? 1 : 0,
-    needsHumanReview ? 1 : 0,
-    reasons.join(','),
-    jobId
-  );
+  jobsRepo.updateQualification(jobId, {
+    inServiceArea: inServiceArea === true,
+    serviceSupported,
+    needsHumanReview,
+    humanReviewReason: reasons.join(','),
+  });
 
   logAction({
     action: 'qualify_job',
