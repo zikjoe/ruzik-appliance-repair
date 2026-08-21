@@ -17,17 +17,25 @@ flowchart LR
     classDef feature fill:#dbe3ef,stroke:#5e7391,color:#1c2b3e
     classDef launch fill:#f0d3d8,stroke:#ac3448,color:#3a0f16
 
-    I2["#2 Business & ownership decisions"]:::business
-    I7["#7 Provision hosting"]:::golive
-    I8["#8 Netlify webhook config"]:::golive
-    I9["#9 Production credentials"]:::golive
-    I10["#10 SMTP for owner alerts"]:::golive
-    I5["#5 Twilio SMS adapter (code)"]:::golive
-    I11["#11 Twilio account + wiring"]:::golive
-    I3["#3 Human QA checklist"]:::golive
-    I12["#12 Go-live cutover"]:::launch
-    I4["#4 First-response-time metric"]:::feature
-    I6["#6 Admin dashboard UI"]:::feature
+    subgraph P1["Phase 1 — Foundation (no blockers, start anytime)"]
+        I2["#2 Business & ownership decisions 🔒"]:::business
+        I4["#4 First-response-time metric"]:::feature
+        I5["#5 Twilio SMS adapter (code)"]:::golive
+        I6["#6 Admin dashboard UI"]:::feature
+    end
+
+    subgraph P2["Phase 2 — Infrastructure & wiring — gate: Phase 1 closed"]
+        I3["#3 Human QA checklist"]:::golive
+        I7["#7 Provision hosting 🔒"]:::golive
+        I8["#8 Netlify webhook config 🔒"]:::golive
+        I9["#9 Production credentials 🔒"]:::golive
+        I10["#10 SMTP for owner alerts 🔒"]:::golive
+        I11["#11 Twilio account + wiring 🔒"]:::golive
+    end
+
+    subgraph P3["Phase 3 — Launch — gate: Phase 2 closed"]
+        I12["#12 Go-live cutover 🔒"]:::launch
+    end
 
     I2 --> I7
     I7 --> I8
@@ -59,8 +67,22 @@ flowchart LR
 
 **Reading it:** an arrow means "the tail blocks the head" — #2 has to close
 before #7 can reasonably start, not just before it finishes. Tan = business
-decision (yours to make, not code). Green = go-live infrastructure. Blue =
-independent improvements that don't block launch. Red = the actual cutover.
+decision. Green = go-live infrastructure. Blue = independent improvements
+that don't block launch. Red = the actual cutover. **🔒 = needs you
+specifically** — an account, a payment decision, or a real-world action
+I can't take on your behalf, as distinct from code/doc work that can just
+get picked up. Everything unlocked (#3, #4, #5, #6) is engineering work,
+available to hand to a session anytime, no waiting on you.
+
+**The three phases are gates, not just labels** — also applied as GitHub
+labels (`phase-1-foundation`, `phase-2-infrastructure`, `phase-3-launch`)
+so they're filterable on the issues list too. Phase 2 shouldn't meaningfully
+start until Phase 1 is closed (it's blocked on #2 and, for #11, on #5) —
+same for Phase 3 against Phase 2. GitHub Milestones would give the same
+grouping with a built-in progress bar; I don't have a tool that can create
+one, so labels are standing in unless you'd rather set up the three
+milestones yourself (Issues → Milestones → New milestone) and hand me the
+numbers to assign issues to them.
 
 **Two nodes have no arrows on purpose** — #4 (first-response-time metric)
 and #6 (admin dashboard) don't block anything and aren't blocked by
