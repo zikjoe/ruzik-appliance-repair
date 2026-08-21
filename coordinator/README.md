@@ -43,6 +43,7 @@ Server listens on `:3000` by default (`PORT` env var to change).
 | `test/acceptance/` | The 25-50 scripted scenarios required by the Pilot Acceptance Test — `npm test` |
 | `docs/` | Pilot plan, authority matrix, metrics definitions, ownership checklist, runbook, go-live steps |
 | `docs/architecture.html` | Interactive schematic of the whole request pipeline — open it directly in a browser, or ask Claude to republish it as an Artifact. Hand-authored, not generated — update it when the pipeline shape changes, not on every commit. |
+| `docs/roadmap.md` | Mermaid flowchart of what's left before go-live (GitHub Issues #2–#12) and how they block each other. Issues are the source of truth — this is a snapshot, not a sync. |
 
 ## Explicitly not built (Phase-One Channels)
 
