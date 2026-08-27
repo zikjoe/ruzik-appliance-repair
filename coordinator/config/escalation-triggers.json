@@ -1,0 +1,27 @@
+{
+  "_source": "Job description § Mandatory Human Escalation. safetyKeywords are checked first, before any AI-drafted reply is generated — a hit skips straight to escalation with a canned safety redirect, never an AI-composed message.",
+  "safetyKeywords": {
+    "gas": ["gas smell", "smell gas", "gas leak", "rotten egg smell"],
+    "fire_smoke": ["fire", "smoke", "smoking", "burning smell", "sparks", "sparking"],
+    "electrical": ["shock", "shocked", "electrocut", "exposed wire", "sparking outlet"],
+    "flooding": ["flooding", "flooded", "water everywhere", "burst pipe", "leaking badly"],
+    "injury": ["injured", "injury", "hurt myself", "burned myself", "cut myself"]
+  },
+  "escalationTriggers": [
+    { "key": "angry_or_threatening", "description": "Customer is angry, threatening, or requesting a refund" },
+    { "key": "safety_hazard", "description": "Property damage, injury, fire, gas, smoke, flooding, or electrical danger mentioned" },
+    { "key": "charge_dispute", "description": "Customer disputes a charge" },
+    { "key": "price_outside_list", "description": "Required price is outside the approved price list" },
+    { "key": "technician_payment_request", "description": "A technician requests additional payment" },
+    { "key": "ai_uncertain", "description": "The AI is uncertain about the customer's request" },
+    { "key": "repeated_failure", "description": "The same action failed twice" },
+    { "key": "warranty_callback", "description": "A warranty callback is reported" },
+    { "key": "high_value_or_commercial", "description": "Commercial or unusually high-value job" },
+    { "key": "legal_insurance_employment_tax_licensing", "description": "Request involves legal, insurance, employment, tax, or licensing matters" },
+    { "key": "prompt_injection_suspected", "description": "Inbound message attempts to override instructions, extract the system prompt, or impersonate the owner/a technician" },
+    { "key": "cancellation", "description": "Customer wants to cancel a job (§3 Scheduling: 'Escalate conflicts, cancellations, late arrivals, and unaccepted assignments')" },
+    { "key": "late_arrival", "description": "Technician is reported late or a no-show" },
+    { "key": "scheduling_conflict", "description": "A scheduling conflict (double-booking, no compatible window) is reported" },
+    { "key": "unaccepted_assignment", "description": "Technician did not accept a recommended job assignment" }
+  ]
+}

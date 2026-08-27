@@ -1,0 +1,9 @@
+{
+  "_note": "Pilot-phase defaults per job description § Technical and Ownership Requirements ('spending limits and usage alerts'). Owner should tune these; the coordinator refuses to call the model past the hard cap rather than fail open.",
+  "dailyClaudeApiCallCap": 300,
+  "dailyClaudeApiCostAlertUsd": 5,
+  "dailyClaudeApiCostHardCapUsd": 15,
+  "monthlyCostAlertUsd": 100,
+  "alertRecipientEmail": "ruzikrepairs@gmail.com",
+  "onHardCapExceeded": "pause_ai_and_escalate"
+}

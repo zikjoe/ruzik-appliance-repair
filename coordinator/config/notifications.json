@@ -1,0 +1,9 @@
+{
+  "_note": "Real-time owner alerts, distinct from config/spending-limits.json's cost-alert email. Sends fail gracefully (log + no-op) until real SMTP/Twilio credentials are set — see .env.example.",
+  "recipientEmail": "ruzikrepairs@gmail.com",
+  "recipientPhone": "+16788245161",
+  "alertOn": {
+    "escalations": true,
+    "pendingApprovals": true
+  }
+}

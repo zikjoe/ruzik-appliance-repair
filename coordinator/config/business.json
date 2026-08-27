@@ -1,0 +1,12 @@
+{
+  "companyName": "Ruzik Appliance Repair and Handyman Services",
+  "owner": "Isaac-Josiah Olumor",
+  "phone": "678-824-5161",
+  "email": "ruzikrepairs@gmail.com",
+  "hours": {
+    "mon-sat": "8:00 AM - 6:00 PM",
+    "sun": "closed"
+  },
+  "responseTimeTargetMinutes": 2,
+  "timezone": "America/New_York"
+}
